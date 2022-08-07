@@ -3,3 +3,4 @@ README.Rmd
 README.html
 Rakefile
 _pkgdown.yml
+^\.github$
