@@ -1,0 +1,13 @@
+destination: "../../websites/R/oblicubes/"
+url: "https://trevorldavis.com/R/oblicubes"
+development:
+    mode: auto
+figures:
+  dev: ragg::agg_png
+  dpi: 96
+  dev.args: []
+  fig.ext: png
+  fig.width: 7
+  fig.height: 7
+  fig.retina: 2
+  bg: "white"
