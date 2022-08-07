@@ -115,6 +115,7 @@ if (require("grid")) {
   dim(col) <- dim(mat)
   coords <- xyz_heightmap(mat - min(mat) + 3L, col = col,
                              scale = 0.3, ground = "xy")
+  grid.newpage()
   grid.oblicubes(coords)
 }
 }
