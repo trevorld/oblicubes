@@ -126,60 +126,16 @@ oblicubesGrob <- function(x, y = NULL, z = NULL,
             df <- df[-which(i_hidden), ]
     }
     df <- op_transform(df, xo, yo, width) # rescale, translate
-
-    if (scale == 0) {
-        n_faces <- 1
-    } else if (angle == 0 || angle == 90 || angle == 180 || angle == 270) {
-        n_faces <- 2
-    } else {
-        n_faces <- 3
-    }
-
     mat <- as.matrix(df[, c(1,2,3)])
-    x_top <- top_x(mat, angle, scale, width)
-    y_top <- top_y(mat, angle, scale, width)
 
-    if (angle >= 45 && angle < 135) {
-        x_two <- south_x(mat, angle, scale, width)
-        y_two <- south_y(mat, angle, scale, width)
-    } else if (angle >= 135 && angle < 225) {
-        x_two <- east_x(mat, angle, scale, width)
-        y_two <- east_y(mat, angle, scale, width)
-    } else if (angle >= 225 && angle < 315) {
-        x_two <- north_x(mat, angle, scale, width)
-        y_two <- north_y(mat, angle, scale, width)
-    } else if (angle >= 315 || angle < 45) {
-        x_two <- west_x(mat, angle, scale, width)
-        y_two <- west_y(mat, angle, scale, width)
-    }
+    faces <- get_faces(angle, scale)
+    xs <- lapply(faces, face_x, mat, angle, scale, width)
+    ys <- lapply(faces, face_y, mat, angle, scale, width)
 
-    if ((angle > 0 && angle < 45) || (angle >= 135 && angle < 180)) {
-        x_three <- south_x(mat, angle, scale, width)
-        y_three <- south_y(mat, angle, scale, width)
-    } else if ((angle > 90 && angle < 135) || (angle >= 225 && angle < 270)) {
-        x_three <- east_x(mat, angle, scale, width)
-        y_three <- east_y(mat, angle, scale, width)
-    } else if ((angle > 180 && angle < 225) || (angle >= 315 && angle < 360)) {
-        x_three <- north_x(mat, angle, scale, width)
-        y_three <- north_y(mat, angle, scale, width)
-    } else if ((angle > 315 && angle < 360) || (angle >= 45 && angle < 90)) {
-        x_three <- west_x(mat, angle, scale, width)
-        y_three <- west_y(mat, angle, scale, width)
-    }
+    x <- do.call(splice4, xs)
+    y <- do.call(splice4, ys)
+    gp$fill <- rep(df$fill, each = length(xs))
 
-    if (n_faces == 1) {
-        x <- x_top
-        y <- y_top
-        gp$fill <- df$fill
-    } else if (n_faces == 2) {
-        x <- splice4(x_two, x_top)
-        y <- splice4(y_two, y_top)
-        gp$fill <- rep(df$fill, each = 2)
-    } else {
-        x <- splice4(x_three, x_two, x_top)
-        y <- splice4(y_three, y_two, y_top)
-        gp$fill <- rep(df$fill, each = 3)
-    }
     polygonGrob(x=x, y=y,
                 id.lengths = rep(4, length(gp$fill)),
                 default.units = "bigpts",

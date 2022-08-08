@@ -3,6 +3,46 @@ to_radians <- function(t) pi * t / 180
 z_factor_x <- function(scale, angle) scale * cos(to_radians(angle))
 z_factor_y <- function(scale, angle) scale * sin(to_radians(angle))
 
+get_faces <- function(angle = 45, scale = 0.5) {
+    if (scale == 0)
+        "top"
+    else if (angle == 0)
+        c("top", "west")
+    else if (angle < 90)
+        c("top", "west", "south")
+    else if (angle == 90)
+        c("top", "south")
+    else if (angle < 180)
+        c("top", "south", "east")
+    else if (angle == 180)
+        c("top", "east")
+    else if (angle < 270)
+        c("top", "east", "north")
+    else if (angle == 270)
+        c("top", "north")
+    else
+        c("top", "north", "west")
+}
+
+face_x <- function(face, mat, angle, scale, width) {
+    switch(face,
+           top = top_x(mat, angle, scale, width),
+           east = east_x(mat, angle, scale, width),
+           west = west_x(mat, angle, scale, width),
+           north = north_x(mat, angle, scale, width),
+           south = south_x(mat, angle, scale, width),
+           stop(paste("Don't recognize face", face)))
+}
+face_y <- function(face, mat, angle, scale, width) {
+    switch(face,
+           top = top_y(mat, angle, scale, width),
+           east = east_y(mat, angle, scale, width),
+           west = west_y(mat, angle, scale, width),
+           north = north_y(mat, angle, scale, width),
+           south = south_y(mat, angle, scale, width),
+           stop(paste("Don't recognize face", face)))
+}
+
 north_x <- function(mat, angle, scale, width) {
     z_factor <- z_factor_x(scale, angle)
     x_vertices <- -width * c(0.5, -0.5, -0.5, 0.5)

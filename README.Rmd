@@ -3,7 +3,7 @@
 
 [![CRAN Status Badge](https://www.r-pkg.org/badges/version/oblicubes)](https://cran.r-project.org/package=oblicubes)
 [![R-CMD-check](https://github.com/trevorld/oblicubes/workflows/R-CMD-check/badge.svg)](https://github.com/trevorld/oblicubes/actions)
-[![Coverage Status](https://img.shields.io/codecov/c/github/trevorld/oblicubes.svg)](https://codecov.io/github/trevorld/oblicubes?branch=main)
+[![Coverage Status](https://codecov.io/gh/trevorld/oblicubes/branch/main/graph/badge.svg?token=WV34OH5BI9)](https://codecov.io/gh/trevorld/oblicubes)
 
 ### Table of Contents
 
