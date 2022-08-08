@@ -139,8 +139,7 @@ oblicubesGrob <- function(x, y = NULL, z = NULL,
     polygonGrob(x=x, y=y,
                 id.lengths = rep(4, length(gp$fill)),
                 default.units = "bigpts",
-                gp = gp,
-                name = "oblicubes")
+                name = name, gp = gp, vp = vp)
 }
 
 #' @rdname oblicubesGrob
