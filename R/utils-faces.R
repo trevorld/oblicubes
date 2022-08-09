@@ -1,5 +1,4 @@
 to_radians <- function(t) pi * t / 180
-
 z_factor_x <- function(scale, angle) scale * cos(to_radians(angle))
 z_factor_y <- function(scale, angle) scale * sin(to_radians(angle))
 
@@ -30,8 +29,8 @@ face_x <- function(face, mat, angle, scale, width) {
            east = east_x(mat, angle, scale, width),
            west = west_x(mat, angle, scale, width),
            north = north_x(mat, angle, scale, width),
-           south = south_x(mat, angle, scale, width),
-           stop(paste("Don't recognize face", face)))
+           south = south_x(mat, angle, scale, width)
+    )
 }
 face_y <- function(face, mat, angle, scale, width) {
     switch(face,
@@ -39,8 +38,8 @@ face_y <- function(face, mat, angle, scale, width) {
            east = east_y(mat, angle, scale, width),
            west = west_y(mat, angle, scale, width),
            north = north_y(mat, angle, scale, width),
-           south = south_y(mat, angle, scale, width),
-           stop(paste("Don't recognize face", face)))
+           south = south_y(mat, angle, scale, width)
+    )
 }
 
 north_x <- function(mat, angle, scale, width) {

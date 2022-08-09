@@ -25,7 +25,7 @@
 | right-handed coordinate system with z vertical  | left-handed coordinate system with y vertical |
 | Use `xyz_heightmap()` to create x,y,z coordinates | Use `coord_heightmap()` to create x,y,z coordinates |
 | Use `oblicubesGrob()`, `grid.oblicubes()` to render image | Use `isocubesGrob()` to render image |
-| Culls hidden cubes only for primary view orthographic projections | Culls hidden cubes in isometric projection (so faster than `{oblicubes}`'s oblique projection when there are several such cubes) |
+| Fast culling of non-visible cubes for "primary view orthographic projection".  Slower and less thorough culling of non-visible cubes for "oblique projection". | Fast culling of non-visible cubes. |
 
 ## <a name="installation">Installation</a>
 

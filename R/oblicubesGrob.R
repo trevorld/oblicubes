@@ -119,14 +119,9 @@ oblicubesGrob <- function(x, y = NULL, z = NULL,
     gp <- merge_gpar(gp, gpar(...))
 
     df <- data.frame(x=x, y=y, z=z, fill=fill)
-    df <- op_sort(df, angle)
-    if (scale == 0) { # easy to cull hidden cubes if `scale == 0`
-        i_hidden <- rev(duplicated(rev(paste(df$x, df$y))))
-        if (any(i_hidden))
-            df <- df[-which(i_hidden), ]
-    }
+    df <- visible_cubes(df, angle, scale)
     df <- op_transform(df, xo, yo, width) # rescale, translate
-    mat <- as.matrix(df[, c(1,2,3)])
+    mat <- as.matrix(df[, c(1, 2, 3)])
 
     faces <- get_faces(angle, scale)
     xs <- lapply(faces, face_x, mat, angle, scale, width)
