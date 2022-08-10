@@ -140,7 +140,7 @@ mat <- noise_perlin(c(n, n), frequency = 0.042) |>
           cut(8L, labels = FALSE) |>
           matrix(nrow = n, ncol = n)
 coords <- xyz_heightmap(mat, col = grDevices::topo.colors, solid = FALSE)
-grid.oblicuboids(coords)
+grid.oblicuboids(coords, gp = gpar(col = NA))
 ```
 
 ![](man/figures/README-terrain_cuboids-1.png)

@@ -1,9 +1,10 @@
-#' 3D render cuboids via an oblique projection
+#' Render 2D/3D cuboids via an oblique projection
 #'
 #' `oblicuboidsGrob()` / `grid.oblicuboids()` renders cuboids using a 3D oblique projection.
 #' `oblicuboidsGrob()` returns a grid grob object while
 #' `grid.oblicuboids()` also draws the grob to the graphic device.
 #' As a special case may also render a 2D primary view orthographic projection.
+#' @inheritParams oblicubesGrob
 #' @param x Integer vector of x coordinates (if necessary will be rounded to integers).
 #'          May be a `data.frame` of x,y,z coordinates.
 #'          This will be the x-value at the *center* of the cuboid.
@@ -11,25 +12,12 @@
 #'          This will be the x-value at the *center* of the cuboid.
 #' @param z Integer vector of z coordinates (if necessary will be rounded to integers).
 #'          This will be the z-value at the *top* of the cuboid.
-#' @param ... Passed to [grid::gpar()].  Will override any values set in `gp`.
-#' @param scale Oblique projection foreshortening factor.
-#'              0.5 corresponds to the \dQuote{cabinet projection}.
-#'              1.0 corresponds to the \dQuote{cavalier projection}.
-#'              0.0 corresponds to a \dQuote{primary view orthographic projection}.
-#' @param angle Oblique projection angle.
 #' @param fill Fill color(s) for the cuboids.
 #'             If `NULL` and `x` is a data frame with a `fill` or `col` column then we use that column;
 #'             if no such column but `gp` has a `fill` value we use that;
 #'             otherwise we fall back to "grey90".
-#' @param xo,yo The origin of the oblique projection coordinate system in grid units.
-#'               The default is to try to guess a \dQuote{good} value.
-#' @param width Width of the cube's (non-foreshortened) sides.
+#' @param width Width of the cuboids's (non-foreshortened) side.
 #'              The default will be to try to guess a \dQuote{good} value.
-#' @param default.units Default units for the `xo`, `yo`, and `width` arguments.
-#' @param name A character identifier (for grid).
-#' @param gp A \sQuote{grid} gpar object.  See [grid::gpar()].
-#'           Will be merged with the values in `...` and the value of `fill`.
-#' @param vp A \sQuote{grid} viewport object.  See [grid::viewport()].
 #'
 #' @examples
 #' if (require("grid")) {
@@ -63,10 +51,12 @@
 #'   grid.newpage()
 #'   grid.oblicuboids(coords)
 #' }
+#' @return A grid grob.  As a side effect `grid.oblicubes()` also draws to the active graphics device.
 #' @export
 oblicuboidsGrob <- function(x, y = NULL, z = NULL,
                          ...,
                          fill = NULL,
+                         light = darken_face,
                          scale = 0.5,
                          angle = 45,
                          xo = NULL,
@@ -128,7 +118,7 @@ oblicuboidsGrob <- function(x, y = NULL, z = NULL,
 
     x <- do.call(splice4, xs)
     y <- do.call(splice4, ys)
-    gp$fill <- rep(df$fill, each = length(xs))
+    gp$fill <- compute_fill(df$fill, faces, light)
 
     polygonGrob(x=x, y=y,
                 id.lengths = rep(4, length(gp$fill)),

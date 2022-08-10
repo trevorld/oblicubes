@@ -11,3 +11,17 @@ figures:
   fig.height: 7
   fig.retina: 2
   bg: "white"
+reference:
+    - title: "3D rendering functions"
+      desc: "Functions for rendering 2D/3D cubes/cuboids"
+      contents:
+        - grid.oblicubes
+        - grid.oblicuboids
+    - title: "Construct coordinates of cubes/cuboids"
+      desc: "Functions for constructing x,y,z coordinates (and colors)"
+      contents:
+        - xyz_heightmap
+    - title: "Helper color functions"
+      desc: "Functions to help create a pseduo-light effect"
+      contents:
+        - darken_face

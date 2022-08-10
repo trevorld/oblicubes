@@ -34,6 +34,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables("z")
 #'        what you want.
 #' @param ground Orientation of the ground plane. Default: "xy".  Possible
 #'        values "xy", "xz", "zy"
+#' @return A data frame of `x`, `y`, `z`, and possibly `col` columns.
 #' @examples
 #' if (require("grDevices") && require("grid")) {
 #'   mat <- datasets::volcano

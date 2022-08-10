@@ -49,6 +49,9 @@ ensure gaps do not appear when the slope is too great.}
 
 \item{verbose}{Be verbose? default: FALSE}
 }
+\value{
+A data frame of \code{x}, \code{y}, \code{z}, and possibly \code{col} columns.
+}
 \description{
 Calculate x,y,z coordinates from a height matrix
 }

@@ -18,6 +18,23 @@ merge_gpar <- function(gp1, gp2) {
     gp1
 }
 
+splice1 <- function(x, y = NULL, z = NULL) {
+    if (is.null(y)) {
+        x
+    } else if (is.null(z)) {
+        vec <- vector("numeric", length(x) + length(y))
+        vec[rep(c(TRUE, FALSE), length.out = length(vec))] <- x
+        vec[rep(c(FALSE, TRUE), length.out = length(vec))] <- y
+        vec
+    } else {
+        vec <- vector("numeric", length(x) + length(y) + length(z))
+        vec[rep(c(TRUE, FALSE, FALSE), length.out = length(vec))] <- x
+        vec[rep(c(FALSE, TRUE, FALSE), length.out = length(vec))] <- y
+        vec[rep(c(FALSE, FALSE, TRUE), length.out = length(vec))] <- z
+        vec
+    }
+}
+
 splice4 <- function(x, y = NULL, z = NULL) {
     if (is.null(y)) {
         x

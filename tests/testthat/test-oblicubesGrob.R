@@ -18,7 +18,7 @@ test_that("`oblicubesGrob()`", {
           grid.rect(gp = gpar(lty = "dashed"))
           grid.oblicubes(coords, width = 0.15, xo = 0.25, yo = 0.15,
                          angle = angles[i], scale = scales[i],
-                         gp = gpar(lwd=4))
+                         light = FALSE, gp = gpar(lwd=4))
           if (i != 5)
               grid.text(paste("angle =", angles[i]), y=0.92, gp = gpar(cex = 1.2))
           else

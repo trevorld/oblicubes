@@ -3,7 +3,7 @@
 \name{oblicuboidsGrob}
 \alias{oblicuboidsGrob}
 \alias{grid.oblicuboids}
-\title{3D render cuboids via an oblique projection}
+\title{Render 2D/3D cuboids via an oblique projection}
 \usage{
 oblicuboidsGrob(
   x,
@@ -11,6 +11,7 @@ oblicuboidsGrob(
   z = NULL,
   ...,
   fill = NULL,
+  light = darken_face,
   scale = 0.5,
   angle = 45,
   xo = NULL,
@@ -57,6 +58,13 @@ If \code{NULL} and \code{x} is a data frame with a \code{fill} or \code{col} col
 if no such column but \code{gp} has a \code{fill} value we use that;
 otherwise we fall back to "grey90".}
 
+\item{light}{If \code{FALSE} don't perform a "light" effect.
+Otherwise a function that takes two arguments:
+the first \code{face} of the cube/cuboid face
+(one of "top", "west", "east", "south", "north").
+the second \code{col} of the fill color.
+By default we use \code{\link[=darken_face]{darken_face()}}.}
+
 \item{scale}{Oblique projection foreshortening factor.
 0.5 corresponds to the \dQuote{cabinet projection}.
 1.0 corresponds to the \dQuote{cavalier projection}.
@@ -67,7 +75,7 @@ otherwise we fall back to "grey90".}
 \item{xo, yo}{The origin of the oblique projection coordinate system in grid units.
 The default is to try to guess a \dQuote{good} value.}
 
-\item{width}{Width of the cube's (non-foreshortened) sides.
+\item{width}{Width of the cuboids's (non-foreshortened) side.
 The default will be to try to guess a \dQuote{good} value.}
 
 \item{default.units}{Default units for the \code{xo}, \code{yo}, and \code{width} arguments.}
@@ -78,6 +86,9 @@ The default will be to try to guess a \dQuote{good} value.}
 Will be merged with the values in \code{...} and the value of \code{fill}.}
 
 \item{vp}{A \sQuote{grid} viewport object.  See \code{\link[grid:viewport]{grid::viewport()}}.}
+}
+\value{
+A grid grob.  As a side effect \code{grid.oblicubes()} also draws to the active graphics device.
 }
 \description{
 \code{oblicuboidsGrob()} / \code{grid.oblicuboids()} renders cuboids using a 3D oblique projection.

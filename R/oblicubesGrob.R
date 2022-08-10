@@ -1,4 +1,4 @@
-#' 3D render cubes via an oblique projection
+#' Render 2D/3D cubes via an oblique projection
 #'
 #' `oblicubesGrob()` / `grid.oblicubes()` renders cubes using a 3D oblique projection.
 #' `oblicubesGrob()` returns a grid grob object while
@@ -18,6 +18,12 @@
 #'             If `NULL` and `x` is a data frame with a `fill` or `col` column then we use that column;
 #'             if no such column but `gp` has a `fill` value we use that;
 #'             otherwise we fall back to "grey90".
+#' @param light If `FALSE` don't perform a "light" effect.
+#'              Otherwise a function that takes two arguments:
+#'              the first `face` of the cube/cuboid face
+#'              (one of "top", "west", "east", "south", "north").
+#'              the second `col` of the fill color.
+#'              By default we use [darken_face()].
 #' @param xo,yo The origin of the oblique projection coordinate system in grid units.
 #'               The default is to try to guess a \dQuote{good} value.
 #' @param width Width of the cube's (non-foreshortened) sides.
@@ -27,6 +33,7 @@
 #' @param gp A \sQuote{grid} gpar object.  See [grid::gpar()].
 #'           Will be merged with the values in `...` and the value of `fill`.
 #' @param vp A \sQuote{grid} viewport object.  See [grid::viewport()].
+#' @return A grid grob.  As a side effect `grid.oblicubes()` also draws to the active graphics device.
 #'
 #' @examples
 #' if (require("grid")) {
@@ -63,6 +70,7 @@
 oblicubesGrob <- function(x, y = NULL, z = NULL,
                          ...,
                          fill = NULL,
+                         light = darken_face,
                          scale = 0.5,
                          angle = 45,
                          xo = NULL,
@@ -124,7 +132,7 @@ oblicubesGrob <- function(x, y = NULL, z = NULL,
 
     x <- do.call(splice4, xs)
     y <- do.call(splice4, ys)
-    gp$fill <- rep(df$fill, each = length(xs))
+    gp$fill <- compute_fill(df$fill, faces, light)
 
     polygonGrob(x=x, y=y,
                 id.lengths = rep(4, length(gp$fill)),
@@ -137,6 +145,7 @@ oblicubesGrob <- function(x, y = NULL, z = NULL,
 grid.oblicubes <- function(x, y = NULL, z = NULL,
                           ...,
                           fill = NULL,
+                          light = darken_face,
                           scale = 0.5,
                           angle = 45,
                           xo = NULL, yo = NULL, width = NULL,
@@ -148,7 +157,7 @@ grid.oblicubes <- function(x, y = NULL, z = NULL,
     grob <- oblicubesGrob(x, y, z,
                           ...,
                           scale = scale, angle = angle,
-                          fill = fill,
+                          fill = fill, light = light,
                           xo = xo, yo = yo, width = width,
                           default.units = default.units,
                           name = name, gp = gp, vp = vp)
