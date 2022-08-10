@@ -1,5 +1,5 @@
 # Modified example from https://github.com/coolbutuseless/isocubes
-test_that("`oblicubesGrob()`", {
+test_that("`oblicuboidsGrob()`", {
     skip_if_not_installed("grid")
     skip_if_not_installed("vdiffr")
     library("grid")
@@ -16,7 +16,7 @@ test_that("`oblicubesGrob()`", {
       for (i in 1:9) {
           pushViewport(viewport(x=vp_x[i], y=vp_y[i], width=1/3, height=1/3))
           grid.rect(gp = gpar(lty = "dashed"))
-          grid.oblicubes(coords, width = 0.15, xo = 0.25, yo = 0.15,
+          grid.oblicuboids(coords, width = 0.15, xo = 0.25, yo = 0.15,
                          angle = angles[i], scale = scales[i],
                          gp = gpar(lwd=4))
           if (i != 5)
@@ -25,16 +25,5 @@ test_that("`oblicubesGrob()`", {
               grid.text(paste("scale = 0"), y=0.92, gp = gpar(cex = 1.2))
           popViewport()
       }
-    })
-
-    expect_doppelganger("ground_yz", function() {
-      mat <- matrix(c(1, 2, 1, 2, 3, 2, 1, 2, 1), nrow = 3, ncol = 3, byrow = TRUE)
-      coords <- xyz_heightmap(mat, ground="xz")
-      grid.oblicubes(coords, gp = gpar(lwd=4))
-    })
-    expect_doppelganger("ground_zy", function() {
-      mat <- matrix(c(1, 2, 1, 2, 3, 2, 1, 2, 1), nrow = 3, ncol = 3, byrow = TRUE)
-      coords <- xyz_heightmap(mat, ground="zy")
-      grid.oblicubes(coords, gp = gpar(lwd=4))
     })
 })

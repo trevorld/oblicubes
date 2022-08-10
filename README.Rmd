@@ -13,13 +13,14 @@
 
   + [Different oblique projections](#oblique)
   + [Volcano heightmap](#volcano)
+  + [Generating fake terrain](#terrain)
   + [Bitmap font](#bitmap)
 
 * [Related software](#related)
 
 ## <a name="overview">Overview</a>
 
-`{oblicubes}` is an extension for [coolbutuseless's](https://github.com/coolbutuseless) [{isocubes}](https://github.com/coolbutuseless/isocubes) that supports 3D graphics in `{grid}` by rendering cubes with an [oblique projection](https://en.wikipedia.org/wiki/Oblique_projection) (instead of an [isometric projection](https://en.wikipedia.org/wiki/Isometric_projection)).  As a special case we also support "primary view orthographic projections" as well.  Like `{isocubes}` the `{oblicubes}` package only supports rendering non-rotated cubes placed at integer coordinates.  If you need to do more complex oblique projections you'll need to use a package like [{piecepackr}](https://github.com/piecepackr/piecepackr) which supports additional shapes, supports adding art/text to their faces, rotating shapes, placing shapes at non-integer coordinates, etc.
+`{oblicubes}` is an extension for [coolbutuseless's](https://github.com/coolbutuseless) [{isocubes}](https://github.com/coolbutuseless/isocubes) that supports 3D graphics in `{grid}` by rendering cubes/cuboids with an [oblique projection](https://en.wikipedia.org/wiki/Oblique_projection) (instead of an [isometric projection](https://en.wikipedia.org/wiki/Isometric_projection)).  As a special case we also support "primary view orthographic projections" as well.  Like `{isocubes}` the `{oblicubes}` package only supports rendering non-rotated cubes (and cuboids) placed at integer coordinates.  If you need to do more complex oblique projections you'll need to use a package like [{piecepackr}](https://github.com/piecepackr/piecepackr) which supports additional shapes, supports adding art/text to their faces, rotating shapes, placing shapes at non-integer coordinates, etc.
 
 | `{oblicubes}` | `{isocubes}` |
 |---|---|
@@ -28,6 +29,15 @@
 | Use `xyz_heightmap()` to create x,y,z coordinates | Use `coord_heightmap()` to create x,y,z coordinates |
 | Use `oblicubesGrob()`, `grid.oblicubes()` to render image | Use `isocubesGrob()` to render image |
 | Fast culling of non-visible cubes for "primary view orthographic projection".  Slower and less thorough culling of non-visible cubes for "oblique projection". | Fast culling of non-visible cubes. |
+
+Inspired by [cj-holmes](https://github.com/cj-holmes)'s [{isocuboids}](https://github.com/cj-holmes/isocuboids) package this package also supports drawing [cuboids](https://en.wikipedia.org/wiki/Cuboid) in addition to cubes.
+
+| `{oblicubes}` | `{isocuboids}` |
+|---|---|
+| [oblique projection](https://en.wikipedia.org/wiki/Oblique_projection), "primary view orthographic projection" | [isometric projection](https://en.wikipedia.org/wiki/Isometric_projection) | 
+| right-handed coordinate system with z vertical  | left-handed coordinate system with y vertical |
+| Use `xyz_heightmap()` to create x,y,z coordinates | Coordinates generated within image rendering functions |
+| Use `oblicuboidsGrob()`, `grid.oblicuboids()` to render image | Use `cuboid_matrix()` to render image |
 
 ## <a name="installation">Installation</a>
 
@@ -50,7 +60,8 @@ library("grid")
 library("oblicubes")
 angles <- c(135, 90, 45, 180, 45, 0, -135, -90, -45)
 scales <- c(0.5, 0.5, 0.5, 0.5, 0.0, 0.5, 0.5, 0.5, 0.5)
-mat <- matrix(c(1, 2, 1, 2, 3, 2, 1, 2, 1), nrow = 3, ncol = 3, byrow = TRUE)
+mat <- matrix(c(1, 2, 1, 2, 3, 2, 1, 2, 1),
+              nrow = 3, ncol = 3, byrow = TRUE)
 coords <- xyz_heightmap(mat)
 coords$fill <- c("red", "yellow", "green")[coords$z]
 vp_x <- rep(1:3/3 - 1/6, 3)
@@ -71,19 +82,12 @@ for (i in 1:9) {
 
 ### <a name="volcano">Volcano heightmap</a>
 
-```{r volcano_data}
-mat <- datasets::volcano
-val <- as.vector(mat)
-val <- round(255 * (val - min(val)) / diff(range(val)))
-col <- grDevices::terrain.colors(256)[val + 1L]
-dim(col) <- dim(mat)
-```
-
 By default we do an oblique projection with a `scale` of 0.5 and an `angle` of 45.  This is also known as a "cabinet projection":
 
 ```{r volcano_oblique}
-coords <- xyz_heightmap(mat - min(mat) + 3L, col = col,
-                           scale = 0.3, ground = "xy")
+mat <- datasets::volcano
+coords <- xyz_heightmap(mat - min(mat) + 3L, col = grDevices::terrain.colors,
+                        scale = 0.3, ground = "xy")
 grid.oblicubes(coords)
 ```
 
@@ -91,28 +95,45 @@ grid.oblicubes(coords)
 * A `scale` of 0 gives you a "primary view orthographic projection".
 
 ```{r volcano_orthographic}
+mat <- datasets::volcano
 # Top view
 grid.rect(gp=gpar(col=NA, fill="grey5"))
 width <- convertWidth(unit(0.007, "snpc"), "cm")
 pushViewport(viewport(width = 0.7, height = 0.7, x = 0.65, y = 0.65))
-coords <- xyz_heightmap(mat - min(mat) + 3L, col = col,
-                           scale = 0.3, ground = "xy", solid=FALSE)
+coords <- xyz_heightmap(mat - min(mat) + 3L, col = grDevices::terrain.colors,
+                        scale = 0.3, ground = "xy", solid = FALSE)
 grid.oblicubes(coords, scale = 0, width = width, gp = gpar(col=NA))
 popViewport()
 
 # South view
 pushViewport(viewport(width = 0.7, height = 0.3, x = 0.65, y = 0.15))
-coords <- xyz_heightmap(mat - min(mat) + 3L, col = col,
-                           scale = 0.3, ground = "xz")
+coords <- xyz_heightmap(mat - min(mat) + 3L, col = grDevices::terrain.colors,
+                        scale = 0.3, ground = "xz")
 grid.oblicubes(coords, scale = 0, width = width, gp = gpar(col=NA))
 popViewport()
 
 # West view
 pushViewport(viewport(width = 0.3, height = 0.7, x = 0.15, y = 0.65))
-coords <- xyz_heightmap(mat - min(mat) + 3L, col = col,
+coords <- xyz_heightmap(mat - min(mat) + 3L, col = grDevices::terrain.colors,
                            scale = 0.3, ground = "zy")
 grid.oblicubes(coords, scale = 0, width = width, gp = gpar(col=NA))
 popViewport()
+```
+
+### <a name="terrain">Generating fake terrain</a>
+
+Inspired by [cj-holmes](https://github.com/cj-holmes)'s [{isocuboids}](https://github.com/cj-holmes/isocuboids) package this package also supports drawing [cuboids](https://en.wikipedia.org/wiki/Cuboid) in addition to cubes.  Using cuboids instead of cubes can provide significant speed advantages when rendering "height map" style images.  Here is an example generating fake terrain using "perlin noise" generated by the [{ambient}](https://github.com/thomasp85/ambient) package.
+
+```{r terrain_cuboids}
+library("ambient")
+n <- 72
+set.seed(72)
+mat <- noise_perlin(c(n, n), frequency = 0.042) |>
+          cut(8L, labels = FALSE) |>
+          matrix(nrow = n, ncol = n)
+coords <- xyz_heightmap(mat, col = grDevices::topo.colors,
+                        ground = "xy", solid = FALSE)
+grid.oblicuboids(coords)
 ```
 
 ### <a name="bitmap">Bitmap fonts</a>
@@ -140,6 +161,7 @@ grid.oblicubes(coords, width=unit(2.2, "mm"))
 
 ## <a name="related">Related software</a>
 
+* [{ambient}](https://github.com/thomasp85/ambient) generates various "noise".  "perlin noise" is often used to generate random terrains.
 * [{isocubes}](https://github.com/coolbutuseless/isocubes) supports 3D rendering of cubes using an [isometric projection](https://en.wikipedia.org/wiki/Isometric_projection).  Direct inspiration for `{oblicubes}`.
 * [{isocuboids}](https://github.com/cj-holmes/isocuboids) supports 3D rendering of cuboids using an isometric projection.  Specializes in the production of isometric pseudo 3-D images.
 * [{piecepackr}](https://github.com/piecepackr/piecepackr) supports 3D rendering using an oblique projection (as well as other projections).  Compared to `{oblicubes}` it supports more shapes, adding art/text to their faces, rotating shapes, placing shapes at non-integer coordinates, etc.  Specializes in the production of board game graphics.

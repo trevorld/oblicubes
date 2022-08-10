@@ -16,30 +16,35 @@ xyz_heightmap(
 )
 }
 \arguments{
-\item{mat}{integer matrix. The matrix will be interpreted as cubes flat on the
+\item{mat}{integer matrix. The matrix will be interpreted as cubes (or cuboids) flat on the
 page, with the value in the matrix interpreted as the height above the page.}
 
-\item{col}{matrix of colours the same dimensions as the \code{mat} argument.
-Default: NULL.   If \code{col} is not NULL,
-then a \code{col} column will be included in the final returned coordinates.}
+\item{col}{matrix, vector, or (palette) function of colours.
+If a matrix it must be the same dimensions as the \code{mat} argument;
+each cube/cuboid corresponding to that x,y value will have that color.
+If a vector then if the max of \code{z} values is less than equal to the number
+of colors we will use the \code{z} integers
+as indices else we will use \code{\link[base:cut]{base::cut()}} to assign z values to colors.
+If a function we will call it with the argument \code{max(z)} to create a
+a vector of colors and then use the z values as indices.
+If \code{col} is not NULL then a \code{col} column will be included in the final returned coordinates.}
 
 \item{scale}{scale factor for values in matrix. Default = 1}
 
 \item{flipx, flipy}{Should the matrix be flipped in the horizontal/vertical directions (respectively)?
-Default: \code{flipx = FALSE}, \code{flipy = TRUE}.\preformatted{   Note: \code{flipy} defaults to \code{TRUE} as matrices are indexed
-   from the top-down, but the isometric coordinate space is increasing
-   from the bottom up.   Flipping the matrix vertically is usually
-   what you want.
-}}
+Note: \code{flipy} defaults to \code{TRUE} as matrices are indexed
+from the top-down, but the coordinate space is increasing
+from the bottom up.   Flipping the matrix vertically is usually
+what you want.}
 
-\item{ground}{Orientation of the ground plane. Default: 'xy'.  Possible
-values 'xz', 'xy', 'zy'}
+\item{ground}{Orientation of the ground plane. Default: "xy".  Possible
+values "xy", "xz", "zy"}
 
 \item{solid}{Should the heightmap be made 'solid' i.e. without holes?
-default: TRUE.  This can be an expensive operation in terms of
+This can be an expensive operation in terms of
 both memory and CPU, but should be OK for simple examples.
-Set to FALSE if things take too long.  This operation works by
-extruding cubes down from the top of the height map to the floor to
+Set to FALSE if things take too long or you will be rendering cuboids.
+This operation works by extruding cubes down from the top of the height map to the floor to
 ensure gaps do not appear when the slope is too great.}
 
 \item{verbose}{Be verbose? default: FALSE}
@@ -50,32 +55,28 @@ Calculate x,y,z coordinates from a height matrix
 \examples{
 if (require("grid")) {
   mat <- datasets::volcano
-  val <- as.vector(mat)
-  val <- round(255 * (val - min(val)) / diff(range(val)))
-  col <- grDevices::terrain.colors(256)[val + 1L]
-  dim(col) <- dim(mat)
 
   # Top view
   grid.newpage()
   grid.rect(gp=gpar(col=NA, fill="grey5"))
   width <- convertWidth(unit(0.007, "snpc"), "cm")
   pushViewport(viewport(width = 0.7, height = 0.7, x = 0.65, y = 0.65))
-  coords <- xyz_heightmap(mat - min(mat) + 3L, col = col,
-                             scale = 0.3, ground = "xy")
+  coords <- xyz_heightmap(mat - min(mat) + 3L, col = grDevices::terrain.colors,
+                          scale = 0.3, ground = "xy")
   grid.oblicubes(coords, scale = 0, width = width, gp = gpar(col=NA))
   popViewport()
 
   # South view
   pushViewport(viewport(width = 0.7, height = 0.3, x = 0.65, y = 0.15))
-  coords <- xyz_heightmap(mat - min(mat) + 3L, col = col,
-                             scale = 0.3, ground = "xz")
+  coords <- xyz_heightmap(mat - min(mat) + 3L, col = grDevices::terrain.colors,
+                          scale = 0.3, ground = "xz")
   grid.oblicubes(coords, scale = 0, width = width, gp = gpar(col=NA))
   popViewport()
 
   # West view
   pushViewport(viewport(width = 0.3, height = 0.7, x = 0.15, y = 0.65))
-  coords <- xyz_heightmap(mat - min(mat) + 3L, col = col,
-                             scale = 0.3, ground = "zy")
+  coords <- xyz_heightmap(mat - min(mat) + 3L, col = grDevices::terrain.colors,
+                          scale = 0.3, ground = "zy")
   grid.oblicubes(coords, scale = 0, width = width, gp = gpar(col=NA))
   popViewport()
 }

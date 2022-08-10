@@ -1,20 +1,23 @@
-#' 3D render cubes via an oblique projection
+#' 3D render cuboids via an oblique projection
 #'
-#' `oblicubesGrob()` / `grid.oblicubes()` renders cubes using a 3D oblique projection.
-#' `oblicubesGrob()` returns a grid grob object while
-#' `grid.oblicubes()` also draws the grob to the graphic device.
+#' `oblicuboidsGrob()` / `grid.oblicuboids()` renders cuboids using a 3D oblique projection.
+#' `oblicuboidsGrob()` returns a grid grob object while
+#' `grid.oblicuboids()` also draws the grob to the graphic device.
 #' As a special case may also render a 2D primary view orthographic projection.
 #' @param x Integer vector of x coordinates (if necessary will be rounded to integers).
 #'          May be a `data.frame` of x,y,z coordinates.
+#'          This will be the x-value at the *center* of the cuboid.
 #' @param y Integer vector of y coordinates (if necessary will be rounded to integers).
+#'          This will be the x-value at the *center* of the cuboid.
 #' @param z Integer vector of z coordinates (if necessary will be rounded to integers).
+#'          This will be the z-value at the *top* of the cuboid.
 #' @param ... Passed to [grid::gpar()].  Will override any values set in `gp`.
 #' @param scale Oblique projection foreshortening factor.
 #'              0.5 corresponds to the \dQuote{cabinet projection}.
 #'              1.0 corresponds to the \dQuote{cavalier projection}.
 #'              0.0 corresponds to a \dQuote{primary view orthographic projection}.
 #' @param angle Oblique projection angle.
-#' @param fill Fill color(s) for the cubes.
+#' @param fill Fill color(s) for the cuboids.
 #'             If `NULL` and `x` is a data frame with a `fill` or `col` column then we use that column;
 #'             if no such column but `gp` has a `fill` value we use that;
 #'             otherwise we fall back to "grey90".
@@ -32,7 +35,8 @@
 #' if (require("grid")) {
 #'   # we support arbitrary oblique projection angles
 #'   mat <- matrix(c(1, 2, 1, 2, 3, 2, 1, 2, 1), nrow = 3, ncol = 3, byrow = TRUE)
-#'   coords <- xyz_heightmap(mat, col = c("red", "yellow", "green"))
+#'   coords <- xyz_heightmap(mat, solid = FALSE)
+#'   coords$fill <- c("red", "yellow", "green")[coords$z]
 #'
 #'   angles <- c(135, 90, 45, 180, 45, 0, -135, -90, -45)
 #'   scales <- c(0.5, 0.5, 0.5, 0.5, 0.0, 0.5, 0.5, 0.5, 0.5)
@@ -42,7 +46,7 @@
 #'   for (i in 1:9) {
 #'       pushViewport(viewport(x=vp_x[i], y=vp_y[i], width=1/3, height=1/3))
 #'       grid.rect(gp = gpar(lty = "dashed"))
-#'       grid.oblicubes(coords, width = 0.15, xo = 0.25, yo = 0.15,
+#'       grid.oblicuboids(coords, width = 0.15, xo = 0.25, yo = 0.15,
 #'                      angle = angles[i], scale = scales[i],
 #'                      gp = gpar(lwd=4))
 #'       if(i != 5)
@@ -54,13 +58,16 @@
 #'
 #'   # volcano example
 #'   mat <- datasets::volcano
-#'   coords <- xyz_heightmap(mat - min(mat) + 3L, col = grDevices::terrain.colors,
-#'                           scale = 0.3, ground = "xy")
+#'   val <- cut(mat, 256, labels = FALSE)
+#'   col <- grDevices::terrain.colors(256)[val]
+#'   dim(col) <- dim(mat)
+#'   coords <- xyz_heightmap(mat - min(mat) + 3L, col = col,
+#'                              scale = 0.3, ground = "xy", solid = FALSE)
 #'   grid.newpage()
-#'   grid.oblicubes(coords)
+#'   grid.oblicuboids(coords)
 #' }
 #' @export
-oblicubesGrob <- function(x, y = NULL, z = NULL,
+oblicuboidsGrob <- function(x, y = NULL, z = NULL,
                          ...,
                          fill = NULL,
                          scale = 0.5,
@@ -114,13 +121,13 @@ oblicubesGrob <- function(x, y = NULL, z = NULL,
     gp <- merge_gpar(gp, gpar(...))
 
     df <- data.frame(x=x, y=y, z=z, fill=fill)
-    df <- visible_cubes(df, angle, scale) # cull, sort
+    df <- visible_cuboids(df, angle, scale) # cull, sort
     df <- op_transform(df, xo, yo, width) # rescale, translate
     mat <- as.matrix(df[, c(1, 2, 3)])
 
     faces <- get_faces(angle, scale)
-    xs <- lapply(faces, face_x, mat, angle, scale, width)
-    ys <- lapply(faces, face_y, mat, angle, scale, width)
+    xs <- lapply(faces, face_x_oid, mat, angle, scale, width)
+    ys <- lapply(faces, face_y_oid, mat, angle, scale, width)
 
     x <- do.call(splice4, xs)
     y <- do.call(splice4, ys)
@@ -132,9 +139,9 @@ oblicubesGrob <- function(x, y = NULL, z = NULL,
                 name = name, gp = gp, vp = vp)
 }
 
-#' @rdname oblicubesGrob
+#' @rdname oblicuboidsGrob
 #' @export
-grid.oblicubes <- function(x, y = NULL, z = NULL,
+grid.oblicuboids <- function(x, y = NULL, z = NULL,
                           ...,
                           fill = NULL,
                           scale = 0.5,
@@ -145,7 +152,7 @@ grid.oblicubes <- function(x, y = NULL, z = NULL,
                           gp = gpar(),
                           vp = NULL) {
 
-    grob <- oblicubesGrob(x, y, z,
+    grob <- oblicuboidsGrob(x, y, z,
                           ...,
                           scale = scale, angle = angle,
                           fill = fill,

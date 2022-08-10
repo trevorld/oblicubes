@@ -72,7 +72,17 @@ visible_cubes <- function(df, angle, scale) {
         for (face in get_faces(angle, scale))
             df <- cull_face(df, face)
         df <- op_sort(df[which(df$keep), ], angle)
+        df$keep <- NULL
     }
-    df$keep <- NULL
+    df
+}
+
+visible_cuboids <- function(df, angle, scale) {
+    df <- df[order(df$z, df$x, df$y), ]
+    i_hidden <- rev(duplicated(rev(paste(df$x, df$y))))
+    if (any(i_hidden))
+        df <- df[-which(i_hidden), ]
+    if (scale > 0)
+        df <- op_sort(df, angle)
     df
 }
