@@ -14,7 +14,7 @@
   + [Different oblique projections](#oblique)
   + [Volcano heightmap](#volcano)
   + [Generating fake terrain](#terrain)
-  + [Bitmap font](#bitmap)
+  + [Bitmap fonts](#bitmap)
 
 * [Related software](#related)
 
@@ -60,10 +60,8 @@ library("grid")
 library("oblicubes")
 angles <- c(135, 90, 45, 180, 45, 0, -135, -90, -45)
 scales <- c(0.5, 0.5, 0.5, 0.5, 0.0, 0.5, 0.5, 0.5, 0.5)
-mat <- matrix(c(1, 2, 1, 2, 3, 2, 1, 2, 1),
-              nrow = 3, ncol = 3, byrow = TRUE)
-coords <- xyz_heightmap(mat)
-coords$fill <- c("red", "yellow", "green")[coords$z]
+mat <- matrix(c(1, 2, 1, 2, 3, 2, 1, 2, 1), nrow = 3, ncol = 3)
+coords <- xyz_heightmap(mat, col = c("red", "yellow", "green"))
 vp_x <- rep(1:3/3 - 1/6, 3)
 vp_y <- rep(3:1/3 - 1/6, each = 3)
 for (i in 1:9) {
@@ -89,8 +87,8 @@ By default we do an oblique projection with a `scale` of 0.5 and an `angle` of 4
 
 ```r
 mat <- datasets::volcano
-coords <- xyz_heightmap(mat - min(mat) + 3L, col = grDevices::terrain.colors,
-                        scale = 0.3, ground = "xy")
+mat <- 0.3 * (mat - min(mat)) + 1.0
+coords <- xyz_heightmap(mat, col = grDevices::terrain.colors)
 grid.oblicubes(coords)
 ```
 
@@ -101,27 +99,28 @@ grid.oblicubes(coords)
 
 
 ```r
+library("grDevices")
 mat <- datasets::volcano
-# Top view
+mat <- 0.3 * (mat - min(mat)) + 1.0
+
 grid.rect(gp=gpar(col=NA, fill="grey5"))
 width <- convertWidth(unit(0.007, "snpc"), "cm")
+
+# Top view
 pushViewport(viewport(width = 0.7, height = 0.7, x = 0.65, y = 0.65))
-coords <- xyz_heightmap(mat - min(mat) + 3L, col = grDevices::terrain.colors,
-                        scale = 0.3, ground = "xy", solid = FALSE)
+coords <- xyz_heightmap(mat, col = terrain.colors, solid = FALSE)
 grid.oblicubes(coords, scale = 0, width = width, gp = gpar(col=NA))
 popViewport()
 
 # South view
 pushViewport(viewport(width = 0.7, height = 0.3, x = 0.65, y = 0.15))
-coords <- xyz_heightmap(mat - min(mat) + 3L, col = grDevices::terrain.colors,
-                        scale = 0.3, ground = "xz")
+coords <- xyz_heightmap(mat, col = terrain.colors, ground = "xz")
 grid.oblicubes(coords, scale = 0, width = width, gp = gpar(col=NA))
 popViewport()
 
 # West view
 pushViewport(viewport(width = 0.3, height = 0.7, x = 0.15, y = 0.65))
-coords <- xyz_heightmap(mat - min(mat) + 3L, col = grDevices::terrain.colors,
-                           scale = 0.3, ground = "zy")
+coords <- xyz_heightmap(mat, col = terrain.colors, ground = "zy")
 grid.oblicubes(coords, scale = 0, width = width, gp = gpar(col=NA))
 popViewport()
 ```
@@ -140,8 +139,7 @@ set.seed(72)
 mat <- noise_perlin(c(n, n), frequency = 0.042) |>
           cut(8L, labels = FALSE) |>
           matrix(nrow = n, ncol = n)
-coords <- xyz_heightmap(mat, col = grDevices::topo.colors,
-                        ground = "xy", solid = FALSE)
+coords <- xyz_heightmap(mat, col = grDevices::topo.colors, solid = FALSE)
 grid.oblicuboids(coords)
 ```
 
@@ -175,13 +173,10 @@ bm <- (3 * bml) |>
     bm_shadow(value = 2L) |>
     bm_call(cbind) |>
     bm_extend(sides = 1L, value = 1L)
-col <- matrix("", nrow=nrow(bm), ncol=ncol(bm))
-col[which(bm == 3)] <- "darkblue"
-col[which(bm == 2)] <- "lightblue"
-col[which(bm == 1)] <- "grey20"
-col[which(bm == 0)] <- "white"
-
-coords <- xyz_heightmap(bm, col, flipy=FALSE)
+col <- apply(bm + 1L, c(1, 2), function(i) {
+               switch(i, "white", "grey20", "lightblue", "darkblue")
+             })
+coords <- xyz_heightmap(bm, col = col, flipy=FALSE)
 grid.oblicubes(coords, width=unit(2.2, "mm"))
 ```
 

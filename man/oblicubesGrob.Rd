@@ -108,8 +108,8 @@ if (require("grid")) {
 
   # volcano example
   mat <- datasets::volcano
-  coords <- xyz_heightmap(mat - min(mat) + 3L, col = grDevices::terrain.colors,
-                          scale = 0.3, ground = "xy")
+  mat <- 0.3 * (mat - min(mat)) + 1.0
+  coords <- xyz_heightmap(mat, col = grDevices::terrain.colors)
   grid.newpage()
   grid.oblicubes(coords)
 }

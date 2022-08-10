@@ -1,21 +1,10 @@
-# Copies and derivatives of functions originally from {isocubes}
+# Derivatives of function originally from {isocubes}
 # Originally MIT License: (c) 2022 mikefc@coolbutuseless.com
+# Compared to `isocubes::coords_heightmap()` we don't try to remove hidden cubes
+# Allow `col` to a be a vector or function.
+# By default "up" is 'z' coordinates (which are always positive) and we support more "ground" values
 
 if (getRversion() >= "2.15.1")  utils::globalVariables("z")
-
-# #' Cheap version of darkening a colour. much cheaper than colorspace package
-# #' @param fill vector of R colours
-# #' @param amount fraction to darken by
-# #' @noRd
-# #' @importFrom grDevices rgb col2rgb
-# cheap_darken <- function(fill, amount) {
-#   mat <- col2rgb(fill, alpha = TRUE)
-#   mat[1:3,] <- mat[1:3,] * (1 - amount)
-#   rgb(mat[1,], mat[2,], mat[3,], mat[4,], maxColorValue = 255)
-# }
-
-# Compared to `coords_heightmap()` we don't try to remove hidden cubes
-# By default "up" is 'z' coordinates (which are always positive) and we support more "ground" values
 
 #' Calculate x,y,z coordinates from a height matrix
 #'
@@ -46,30 +35,29 @@ if (getRversion() >= "2.15.1")  utils::globalVariables("z")
 #' @param ground Orientation of the ground plane. Default: "xy".  Possible
 #'        values "xy", "xz", "zy"
 #' @examples
-#' if (require("grid")) {
+#' if (require("grDevices") && require("grid")) {
 #'   mat <- datasets::volcano
+#'   mat <- 0.3 * (mat - min(mat)) + 1.0
 #'
-#'   # Top view
 #'   grid.newpage()
 #'   grid.rect(gp=gpar(col=NA, fill="grey5"))
 #'   width <- convertWidth(unit(0.007, "snpc"), "cm")
+#'
+#'   # Top view
 #'   pushViewport(viewport(width = 0.7, height = 0.7, x = 0.65, y = 0.65))
-#'   coords <- xyz_heightmap(mat - min(mat) + 3L, col = grDevices::terrain.colors,
-#'                           scale = 0.3, ground = "xy")
+#'   coords <- xyz_heightmap(mat, col = terrain.colors, solid = FALSE)
 #'   grid.oblicubes(coords, scale = 0, width = width, gp = gpar(col=NA))
 #'   popViewport()
 #'
 #'   # South view
 #'   pushViewport(viewport(width = 0.7, height = 0.3, x = 0.65, y = 0.15))
-#'   coords <- xyz_heightmap(mat - min(mat) + 3L, col = grDevices::terrain.colors,
-#'                           scale = 0.3, ground = "xz")
+#'   coords <- xyz_heightmap(mat, col = terrain.colors, ground = "xz")
 #'   grid.oblicubes(coords, scale = 0, width = width, gp = gpar(col=NA))
 #'   popViewport()
 #'
 #'   # West view
 #'   pushViewport(viewport(width = 0.3, height = 0.7, x = 0.15, y = 0.65))
-#'   coords <- xyz_heightmap(mat - min(mat) + 3L, col = grDevices::terrain.colors,
-#'                           scale = 0.3, ground = "zy")
+#'   coords <- xyz_heightmap(mat, col = terrain.colors, ground = "zy")
 #'   grid.oblicubes(coords, scale = 0, width = width, gp = gpar(col=NA))
 #'   popViewport()
 #' }

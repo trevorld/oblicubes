@@ -1,7 +1,7 @@
 Package: oblicubes
 Type: Package
 Title: Obliquely Projected Cubes and Cuboids
-Version: 0.1.0-5
+Version: 0.1.0-6
 Authors@R: c(person("Trevor L", "Davis", role = c("aut", "cre"),
                     email = "trevor.l.davis@gmail.com",
                     comment = c(ORCID = "0000-0001-6341-4639")),
@@ -11,11 +11,11 @@ URL: https://trevorldavis.com/R/oblicubes/dev
 BugReports: https://github.com/trevorld/oblicubes/issues
 License: MIT + file LICENSE
 Imports:
+    grDevices,
     grid,
     utils
 Suggests:
     datasets,
-    grDevices,
     testthat (>= 3.0.0),
     vdiffr
 Remotes: coolbutuseless/isocubes

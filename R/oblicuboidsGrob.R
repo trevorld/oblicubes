@@ -35,9 +35,8 @@
 #' if (require("grid")) {
 #'   # we support arbitrary oblique projection angles
 #'   mat <- matrix(c(1, 2, 1, 2, 3, 2, 1, 2, 1), nrow = 3, ncol = 3, byrow = TRUE)
-#'   coords <- xyz_heightmap(mat, solid = FALSE)
-#'   coords$fill <- c("red", "yellow", "green")[coords$z]
-#'
+#'   coords <- xyz_heightmap(mat, col = c("red", "yellow", "green"),
+#'                           solid = FALSE)
 #'   angles <- c(135, 90, 45, 180, 45, 0, -135, -90, -45)
 #'   scales <- c(0.5, 0.5, 0.5, 0.5, 0.0, 0.5, 0.5, 0.5, 0.5)
 #'   vp_x <- rep(1:3/3 - 1/6, 3)
@@ -58,11 +57,9 @@
 #'
 #'   # volcano example
 #'   mat <- datasets::volcano
-#'   val <- cut(mat, 256, labels = FALSE)
-#'   col <- grDevices::terrain.colors(256)[val]
-#'   dim(col) <- dim(mat)
-#'   coords <- xyz_heightmap(mat - min(mat) + 3L, col = col,
-#'                              scale = 0.3, ground = "xy", solid = FALSE)
+#'   mat <- 0.3 * (mat - min(mat)) + 1.0
+#'   coords <- xyz_heightmap(mat, col = grDevices::terrain.colors,
+#'                           solid = FALSE)
 #'   grid.newpage()
 #'   grid.oblicuboids(coords)
 #' }

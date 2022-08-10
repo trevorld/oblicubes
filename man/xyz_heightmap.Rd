@@ -53,30 +53,29 @@ ensure gaps do not appear when the slope is too great.}
 Calculate x,y,z coordinates from a height matrix
 }
 \examples{
-if (require("grid")) {
+if (require("grDevices") && require("grid")) {
   mat <- datasets::volcano
+  mat <- 0.3 * (mat - min(mat)) + 1.0
 
-  # Top view
   grid.newpage()
   grid.rect(gp=gpar(col=NA, fill="grey5"))
   width <- convertWidth(unit(0.007, "snpc"), "cm")
+
+  # Top view
   pushViewport(viewport(width = 0.7, height = 0.7, x = 0.65, y = 0.65))
-  coords <- xyz_heightmap(mat - min(mat) + 3L, col = grDevices::terrain.colors,
-                          scale = 0.3, ground = "xy")
+  coords <- xyz_heightmap(mat, col = terrain.colors, solid = FALSE)
   grid.oblicubes(coords, scale = 0, width = width, gp = gpar(col=NA))
   popViewport()
 
   # South view
   pushViewport(viewport(width = 0.7, height = 0.3, x = 0.65, y = 0.15))
-  coords <- xyz_heightmap(mat - min(mat) + 3L, col = grDevices::terrain.colors,
-                          scale = 0.3, ground = "xz")
+  coords <- xyz_heightmap(mat, col = terrain.colors, ground = "xz")
   grid.oblicubes(coords, scale = 0, width = width, gp = gpar(col=NA))
   popViewport()
 
   # West view
   pushViewport(viewport(width = 0.3, height = 0.7, x = 0.15, y = 0.65))
-  coords <- xyz_heightmap(mat - min(mat) + 3L, col = grDevices::terrain.colors,
-                          scale = 0.3, ground = "zy")
+  coords <- xyz_heightmap(mat, col = terrain.colors, ground = "zy")
   grid.oblicubes(coords, scale = 0, width = width, gp = gpar(col=NA))
   popViewport()
 }
