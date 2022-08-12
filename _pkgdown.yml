@@ -17,6 +17,8 @@ reference:
       contents:
         - grid.oblicubes
         - grid.oblicuboids
+        - geom_oblicubes
+        - geom_oblicuboids
     - title: "Construct coordinates of cubes/cuboids"
       desc: "Functions for constructing x,y,z coordinates (and colors)"
       contents:

@@ -27,17 +27,17 @@
 | [oblique projection](https://en.wikipedia.org/wiki/Oblique_projection), "primary view orthographic projection" | [isometric projection](https://en.wikipedia.org/wiki/Isometric_projection) | 
 | right-handed coordinate system with z vertical  | left-handed coordinate system with y vertical |
 | Use `xyz_heightmap()` to create x,y,z coordinates | Use `coord_heightmap()` to create x,y,z coordinates |
-| Use `oblicubesGrob()`, `grid.oblicubes()` to render image | Use `isocubesGrob()` to render image |
+| Use `oblicubesGrob()`, `grid.oblicubes()`, or `geom_oblicubes()` to render image | Use `isocubesGrob()` to render image |
 | Fast culling of non-visible cubes for "primary view orthographic projection".  Slower and less thorough culling of non-visible cubes for "oblique projection". | Fast culling of non-visible cubes. |
 
-Inspired by [cj-holmes](https://github.com/cj-holmes)'s [{isocuboids}](https://github.com/cj-holmes/isocuboids) package this package also supports drawing [cuboids](https://en.wikipedia.org/wiki/Cuboid) in addition to cubes.
+Inspired by [cj-holmes](https://github.com/cj-holmes)'s [{isocuboids}](https://github.com/cj-holmes/isocuboids) package this package also supports drawing [cuboids](https://en.wikipedia.org/wiki/Cuboid) in addition to cubes.  Using cuboids instead of cubes can provide significant speed advantages when rendering "height map" style images.
 
 | `{oblicubes}` | `{isocuboids}` |
 |---|---|
 | [oblique projection](https://en.wikipedia.org/wiki/Oblique_projection), "primary view orthographic projection" | [isometric projection](https://en.wikipedia.org/wiki/Isometric_projection) | 
 | right-handed coordinate system with z vertical  | left-handed coordinate system with y vertical |
-| Use `xyz_heightmap()` to create x,y,z coordinates | Coordinates generated within image rendering functions |
-| Use `oblicuboidsGrob()`, `grid.oblicuboids()` to render image | Use `cuboid_matrix()` to render image |
+| Use `xyz_heightmap(solid = FALSE)` to create x,y,z coordinates | Coordinates generated within image rendering functions |
+| Use `oblicuboidsGrob()`, `grid.oblicuboids()`, or `geom_oblicuboids()` to render image | Use `cuboid_matrix()`, `cuboid_image()` to render image |
 
 ## <a name="installation">Installation</a>
 
@@ -157,7 +157,8 @@ grid.oblicubes(coords, width=unit(2.2, "mm"))
 ## <a name="related">Related software</a>
 
 * [{ambient}](https://github.com/thomasp85/ambient) generates various "noise".  "perlin noise" is often used to generate random terrains.
+* [{ggrgl}](https://github.com/coolbutuseless/ggrgl) Also provides 3D cuboids rendering support (using `{ggplot2}` and `{rgl}`).
 * [{isocubes}](https://github.com/coolbutuseless/isocubes) supports 3D rendering of cubes using an [isometric projection](https://en.wikipedia.org/wiki/Isometric_projection).  Direct inspiration for `{oblicubes}`.
-* [{isocuboids}](https://github.com/cj-holmes/isocuboids) supports 3D rendering of cuboids using an isometric projection.  Specializes in the production of isometric pseudo 3-D images.
+* [{isocuboids}](https://github.com/cj-holmes/isocuboids) supports 3D rendering of cuboids using an isometric projection.  Specializes in the production of isometric pseudo 3-D images.  Direct inspiration for the `{oblicubes}` cuboid support.
 * [{piecepackr}](https://github.com/piecepackr/piecepackr) supports 3D rendering using an oblique projection (as well as other projections).  Compared to `{oblicubes}` it supports more shapes, adding art/text to their faces, rotating shapes, placing shapes at non-integer coordinates, etc.  Specializes in the production of board game graphics.
 * [{rayshader}](https://github.com/tylermorganwall/rayshader) creates beautiful 3D visualizations from elevation data using raytracing, hillshading algorithms, and overlays.

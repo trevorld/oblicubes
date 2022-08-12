@@ -1,7 +1,7 @@
 Package: oblicubes
 Type: Package
 Title: Obliquely Projected Cubes and Cuboids
-Version: 0.1.0-6
+Version: 0.1.0-7
 Authors@R: c(person("Trevor L", "Davis", role = c("aut", "cre"),
                     email = "trevor.l.davis@gmail.com",
                     comment = c(ORCID = "0000-0001-6341-4639")),
@@ -16,9 +16,9 @@ Imports:
     utils
 Suggests:
     datasets,
+    ggplot2,
     testthat (>= 3.0.0),
     vdiffr
-Remotes: coolbutuseless/isocubes
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.1

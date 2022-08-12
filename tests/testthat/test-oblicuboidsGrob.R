@@ -1,4 +1,3 @@
-# Modified example from https://github.com/coolbutuseless/isocubes
 test_that("`oblicuboidsGrob()`", {
     skip_if_not_installed("grid")
     skip_if_not_installed("vdiffr")
