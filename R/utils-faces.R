@@ -1,6 +1,8 @@
 to_radians <- function(t) pi * t / 180
 z_factor_x <- function(scale, angle) scale * cos(to_radians(angle))
 z_factor_y <- function(scale, angle) scale * sin(to_radians(angle))
+op_project_x <- function(x, z, scale, angle) x + z_factor_x(scale, angle) * z
+op_project_y <- function(y, z, scale, angle) y + z_factor_y(scale, angle) * z
 
 get_faces <- function(angle = 45, scale = 0.5) {
     if (scale == 0)

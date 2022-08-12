@@ -81,22 +81,23 @@ oblicuboidsGrob <- function(x, y = NULL, z = NULL,
         z <- round(z, 0)
     angle <- angle %% 360
 
-    #### do more sophisticated defaults
+    if (is.null(width) || is.null(xo) || is.null(yo))
+        l <- aabb_cuboids(data.frame(x=x, y=y, z=z), scale = scale, angle = angle)
+
     if (is.null(width)) {
-        n <- max(x, y, z)
-        if (n > 10)
-            width <- 0.9 * unit(1 / n, "snpc")
-        else
-            width <- 0.6 * unit(1 / n, "snpc")
+        x_diff <- diff(l$x_op)
+        y_diff <- diff(l$y_op)
+        n <- max(x_diff, y_diff)
+        width <- 0.95 * unit(1 / n, "snpc")
     }
-    if (!is.null(width) && !inherits(width, "unit"))
+    if (!inherits(width, "unit"))
         width <- unit(width, default.units)
     if (is.null(xo))
-        xo <- -0.5 * width
+        xo <- (l$x[1]-l$x_op[1]-0.5) * width + unit(0.01, "snpc")
     if (!inherits(xo, "unit"))
         xo <- unit(xo, default.units)
     if (is.null(yo))
-        yo <- -0.5 * width
+        yo <- -l$y_op[1] * width + unit(0.01, "snpc")
     if (!inherits(yo, "unit"))
         yo <- unit(yo, default.units)
 
