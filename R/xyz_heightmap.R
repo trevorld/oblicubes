@@ -18,7 +18,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables("z")
 #'        as indices else we will use [base::cut()] to assign z values to colors.
 #'        If a function we will call it with the argument `max(z)` to create a
 #'        a vector of colors and then use the z values as indices.
-#'        If `col` is not NULL then a `col` column will be included in the final returned coordinates.
+#'        If `col` is not NULL then a `fill` column will be included in the final returned coordinates.
 #' @param scale scale factor for values in matrix. Default = 1
 #' @param solid Should the heightmap be made 'solid' i.e. without holes?
 #'        This can be an expensive operation in terms of
@@ -34,7 +34,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables("z")
 #'        what you want.
 #' @param ground Orientation of the ground plane. Default: "xy".  Possible
 #'        values "xy", "xz", "zy"
-#' @return A data frame of `x`, `y`, `z`, and possibly `col` columns.
+#' @return A data frame of `x`, `y`, `z`, and possibly `fill` columns.
 #' @examples
 #' if (require("grDevices") && require("grid")) {
 #'   mat <- datasets::volcano
@@ -100,7 +100,7 @@ xyz_heightmap <- function(mat, col = NULL, scale = 1, flipx = FALSE, flipy = TRU
   )
   # Add color if a matrix
   if (!is.null(col) && is.matrix(col))
-      coords$col <- as.vector(col)
+      coords$fill <- as.vector(col)
 
   # Extrude the cubes down to the ground
   if (solid) {
@@ -120,9 +120,9 @@ xyz_heightmap <- function(mat, col = NULL, scale = 1, flipx = FALSE, flipy = TRU
       if (is.function(col))
           col <- col(max(coords$z))
       if (max(coords$z) <= length(col))
-          coords$col <- col[coords$z]
+          coords$fill <- col[coords$z]
       else
-          coords$col <- col[cut(coords$z, length(col), labels = FALSE)]
+          coords$fill <- col[cut(coords$z, length(col), labels = FALSE)]
   }
 
   if (ground == 'xz') {

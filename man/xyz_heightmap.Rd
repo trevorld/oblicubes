@@ -27,7 +27,7 @@ of colors we will use the \code{z} integers
 as indices else we will use \code{\link[base:cut]{base::cut()}} to assign z values to colors.
 If a function we will call it with the argument \code{max(z)} to create a
 a vector of colors and then use the z values as indices.
-If \code{col} is not NULL then a \code{col} column will be included in the final returned coordinates.}
+If \code{col} is not NULL then a \code{fill} column will be included in the final returned coordinates.}
 
 \item{scale}{scale factor for values in matrix. Default = 1}
 
@@ -50,7 +50,7 @@ ensure gaps do not appear when the slope is too great.}
 \item{verbose}{Be verbose? default: FALSE}
 }
 \value{
-A data frame of \code{x}, \code{y}, \code{z}, and possibly \code{col} columns.
+A data frame of \code{x}, \code{y}, \code{z}, and possibly \code{fill} columns.
 }
 \description{
 Calculate x,y,z coordinates from a height matrix
