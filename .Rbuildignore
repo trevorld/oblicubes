@@ -4,4 +4,5 @@ README.html
 Rakefile
 codecov.yml
 _pkgdown.yml
+^pkgdown$
 ^\.github$

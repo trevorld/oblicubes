@@ -1,5 +1,4 @@
-<!-- # oblicubes <img src="man/figures/logo.png" align="right" width="200px" alt="oblicubes hex sticker"> -->
-# oblicubes
+# oblicubes <img src="man/figures/logo.png" align="right" width="200px" alt="oblicubes hex sticker">
 
 [![CRAN Status Badge](https://www.r-pkg.org/badges/version/oblicubes)](https://cran.r-project.org/package=oblicubes)
 [![R-CMD-check](https://github.com/trevorld/oblicubes/workflows/R-CMD-check/badge.svg)](https://github.com/trevorld/oblicubes/actions)
