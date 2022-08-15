@@ -119,12 +119,12 @@ grob_cubes <- function(coord, panel_params, scale, angle, light) {
     grid::gTree(coord = coord,
                 panel_params = panel_params,
                 scale = scale, angle = angle, light = light,
-                cl = "geom_cubes_grob")
+                cl = "oblicubes_cubes_geom")
 }
 
 #' @import grid
 #' @export
-makeContent.geom_cubes_grob <- function(x) {
+makeContent.oblicubes_cubes_geom <- function(x) {
     coord <- x$coord
     panel_params <- x$panel_params
 
