@@ -99,18 +99,20 @@ See \code{\link[=oblicuboidsGrob]{oblicuboidsGrob()}} for more details.
 
 \examples{
 if (require("ggplot2")) {
-  mat <- datasets::volcano
-  mat <- 0.3 * (mat - min(mat)) + 1.0
-
-  # We require an equal aspect ratio
-  df <- xyz_heightmap(mat)
-  g <- ggplot(df, aes(x, y, z = z, fill = z)) +
+  data("volcano", package = "datasets")
+  df <- xyz_heightmap(volcano, scale = 0.3, min = 1)
+  g <- ggplot(df, aes(x, y, z = z, fill = raw)) +
          geom_oblicuboids(light = FALSE) +
          coord_fixed() +
-         scale_fill_viridis_c()
+         scale_fill_gradientn(name = "Height (m)",
+                              colours=terrain.colors(256)) +
+         labs(x = "East (10m)", y = "North (10m)",
+              title = "Maungawhau (`datasets::volcano`)")
   plot(g)
 
-  df <- xyz_heightmap(mat, col = grDevices::terrain.colors)
+  # Using `scale_fill_identity()` if using `xyz_heightmap()`'s `fill` column
+  df <- xyz_heightmap(volcano, scale = 0.3, min = 1,
+                      col = grDevices::heat.colors)
   g <- ggplot(df, aes(x, y, z = z, fill = fill)) +
          geom_oblicuboids() +
          coord_fixed() +

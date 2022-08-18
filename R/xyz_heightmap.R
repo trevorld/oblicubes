@@ -34,7 +34,13 @@ if (getRversion() >= "2.15.1")  utils::globalVariables("z")
 #'        what you want.
 #' @param ground Orientation of the ground plane. Default: "xy".  Possible
 #'        values "xy", "xz", "zy"
-#' @return A data frame of `x`, `y`, `z`, and possibly `fill` columns.
+#' @param min Minimum target `z` value.  If `NULL` ignore else we "translate"
+#'            the z-values so the minimum z-value is equal to this value.
+#' @return A data frame of `x`, `y`, `z`, `raw`, and possibly `fill` columns.
+#'         The "raw" column is the (original) "z" column before any `scale`, `min`, and `ground`
+#'         transformations have been performed (it may be repeated "down" if `solid = TRUE`).
+#'         The "raw" column can be useful as the `fill` value in `ggplot2` plots especially
+#'         when adding a legend.
 #' @examples
 #' if (require("grDevices") && require("grid")) {
 #'   mat <- datasets::volcano
@@ -62,9 +68,21 @@ if (getRversion() >= "2.15.1")  utils::globalVariables("z")
 #'   grid.oblicubes(coords, scale = 0, width = width, gp = gpar(col=NA))
 #'   popViewport()
 #' }
+#' if (require("ggplot2")) {
+#'   data("volcano", package = "datasets")
+#'   df <- xyz_heightmap(volcano, scale = 0.3, min = 1, solid = FALSE)
+#'   g <- ggplot(df, aes(x, y, z = z, fill = raw)) +
+#'          geom_oblicuboids(light = FALSE) +
+#'          coord_fixed() +
+#'          scale_fill_gradientn(name = "Height (m)", colours=terrain.colors(256)) +
+#'          labs(x = "East (10m)", y = "North (10m)", title = "Maungawhau (`datasets::volcano`)")
+#'   plot(g)
+#' }
 #' @export
-xyz_heightmap <- function(mat, col = NULL, scale = 1, flipx = FALSE, flipy = TRUE,
-                             ground = "xy", solid = TRUE, verbose = FALSE) {
+xyz_heightmap <- function(mat, col = NULL,
+                          scale = 1, min = NULL,
+                          flipx = FALSE, flipy = TRUE, ground = "xy",
+                          solid = TRUE, verbose = FALSE) {
 
   verbose <- isTRUE(verbose)
   solid   <- isTRUE(solid)
@@ -75,12 +93,18 @@ xyz_heightmap <- function(mat, col = NULL, scale = 1, flipx = FALSE, flipy = TRU
   if (!is.null(col) && is.matrix(col)) {
     stopifnot(identical(dim(col), dim(mat)))
   }
+  if (!is.null(raw) && is.matrix(raw)) {
+    stopifnot(identical(dim(raw), dim(mat)))
+  }
 
   # Flip matrix horizontally
   if (isTRUE(flipx)) {
     mat <- mat[,rev(seq_len(ncol(mat)))]
     if (!is.null(col) && is.matrix(col)) {
       col <- col[,rev(seq_len(ncol(col)))]
+    }
+    if (!is.null(raw) && is.matrix(raw)) {
+      raw <- raw[,rev(seq_len(ncol(raw)))]
     }
   }
 
@@ -90,14 +114,21 @@ xyz_heightmap <- function(mat, col = NULL, scale = 1, flipx = FALSE, flipy = TRU
     if (!is.null(col) && is.matrix(col)) {
       col <- col[rev(seq_len(nrow(col))), ]
     }
+    if (!is.null(raw) && is.matrix(raw)) {
+      raw <- raw[rev(seq_len(nrow(raw))), ]
+    }
   }
 
   # Create coordinates
   coords <- data.frame(
     x = rep(seq_len(ncol(mat)), each = nrow(mat)),
     y = rep(seq_len(nrow(mat)), times = ncol(mat)),
-    z = round(as.vector(mat) * scale)
+    z = round(as.vector(mat) * scale),
+    raw = as.vector(mat)
   )
+  if (!is.null(min))
+      coords$z <- coords$z + (round(min, 0) - base::min(coords$z))
+
   # Add color if a matrix
   if (!is.null(col) && is.matrix(col))
       coords$fill <- as.vector(col)

@@ -8,6 +8,7 @@ xyz_heightmap(
   mat,
   col = NULL,
   scale = 1,
+  min = NULL,
   flipx = FALSE,
   flipy = TRUE,
   ground = "xy",
@@ -31,6 +32,9 @@ If \code{col} is not NULL then a \code{fill} column will be included in the fina
 
 \item{scale}{scale factor for values in matrix. Default = 1}
 
+\item{min}{Minimum target \code{z} value.  If \code{NULL} ignore else we "translate"
+the z-values so the minimum z-value is equal to this value.}
+
 \item{flipx, flipy}{Should the matrix be flipped in the horizontal/vertical directions (respectively)?
 Note: \code{flipy} defaults to \code{TRUE} as matrices are indexed
 from the top-down, but the coordinate space is increasing
@@ -50,7 +54,11 @@ ensure gaps do not appear when the slope is too great.}
 \item{verbose}{Be verbose? default: FALSE}
 }
 \value{
-A data frame of \code{x}, \code{y}, \code{z}, and possibly \code{fill} columns.
+A data frame of \code{x}, \code{y}, \code{z}, \code{raw}, and possibly \code{fill} columns.
+The "raw" column is the (original) "z" column before any \code{scale}, \code{min}, and \code{ground}
+transformations have been performed (it may be repeated "down" if \code{solid = TRUE}).
+The "raw" column can be useful as the \code{fill} value in \code{ggplot2} plots especially
+when adding a legend.
 }
 \description{
 Calculate x,y,z coordinates from a height matrix
@@ -81,5 +89,15 @@ if (require("grDevices") && require("grid")) {
   coords <- xyz_heightmap(mat, col = terrain.colors, ground = "zy")
   grid.oblicubes(coords, scale = 0, width = width, gp = gpar(col=NA))
   popViewport()
+}
+if (require("ggplot2")) {
+  data("volcano", package = "datasets")
+  df <- xyz_heightmap(volcano, scale = 0.3, min = 1, solid = FALSE)
+  g <- ggplot(df, aes(x, y, z = z, fill = raw)) +
+         geom_oblicuboids(light = FALSE) +
+         coord_fixed() +
+         scale_fill_gradientn(name = "Height (m)", colours=terrain.colors(256)) +
+         labs(x = "East (10m)", y = "North (10m)", title = "Maungawhau (`datasets::volcano`)")
+  plot(g)
 }
 }
