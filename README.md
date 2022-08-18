@@ -15,12 +15,13 @@
   + [Generating fake terrain](#terrain)
   + [Bitmap fonts](#bitmap)
   + [Pseudo 3D images](#pseudo)
+  + [3D bar charts](#3dbar)
 
 * [Related software](#related)
 
 ## <a name="overview">Overview</a>
 
-`{oblicubes}` is an extension for [coolbutuseless's](https://github.com/coolbutuseless) [{isocubes}](https://github.com/coolbutuseless/isocubes) that supports 3D graphics in `{grid}` by rendering cubes/cuboids with an [oblique projection](https://en.wikipedia.org/wiki/Oblique_projection) (instead of an [isometric projection](https://en.wikipedia.org/wiki/Isometric_projection)).  As a special case we also support "primary view orthographic projections" as well.  Like `{isocubes}` the `{oblicubes}` package only supports rendering non-rotated cubes (and cuboids) placed at integer coordinates.  If you need to do more complex oblique projections you'll need to use a package like [{piecepackr}](https://github.com/piecepackr/piecepackr) which supports additional shapes, supports adding art/text to their faces, rotating shapes, placing shapes at non-integer coordinates, etc.
+`{oblicubes}` is an extension for [coolbutuseless's](https://github.com/coolbutuseless) [{isocubes}](https://github.com/coolbutuseless/isocubes) that supports 3D graphics in `{grid}` and `{ggplot2}` by rendering cubes/cuboids with an [oblique projection](https://en.wikipedia.org/wiki/Oblique_projection) (instead of an [isometric projection](https://en.wikipedia.org/wiki/Isometric_projection)).  As a special case we also support "primary view orthographic projections" as well.  Like `{isocubes}` the `{oblicubes}` package only supports rendering non-rotated cubes (and cuboids) placed at integer coordinates.  If you need to do more complex oblique projections you'll need to use a package like [{piecepackr}](https://github.com/piecepackr/piecepackr) which supports additional shapes, supports adding art/text to their faces, rotating shapes, placing shapes at non-integer coordinates, etc.
 
 | `{oblicubes}` | `{isocubes}` |
 |---|---|
@@ -156,8 +157,21 @@ grid.oblicuboids(coords, gp = gpar(col = NA))
 
 
 ```r
-# `{bittermelon}` creates a generic `which()` which defaults to `base::which()`
-library("bittermelon", warn.conflicts = FALSE)
+library("bittermelon")
+```
+
+```
+## 
+## Attaching package: 'bittermelon'
+```
+
+```
+## The following object is masked from 'package:base':
+## 
+##     which
+```
+
+```r
 font_file <- system.file("fonts/spleen/spleen-8x16.hex.gz", package = "bittermelon")
 font <- read_hex(font_file)
 bml <- as_bm_list("RSTATS", font = font)
@@ -195,7 +209,7 @@ library("magick")
 ```
 
 ```
-## Using 8 threads
+## Using 64 threads
 ```
 
 ```r
@@ -231,6 +245,52 @@ grid.text("Pseudo 3D derivative (based on luminosity)",
 ```
 
 ![](man/figures/README-skull-1.png)
+
+### <a name="3dbar">3D bar charts</a>
+
+* **Should** you ever make a 3D bar chart?  Probably not...
+* If you have integer valued y-values **could** you use `{oblicubes}` to make a 3D bar chart?  With some work...
+* You can use `yoffset` and `zoffset` parameters to shift cubes so the top/bottom of the cubes lie on integer values (instead of the center of the cubes)
+
+
+```r
+library("dplyr")
+```
+
+```
+## 
+## Attaching package: 'dplyr'
+```
+
+```
+## The following objects are masked from 'package:stats':
+## 
+##     filter, lag
+```
+
+```
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+```
+
+```r
+library("ggplot2")
+df <- as.data.frame(datasets::Titanic) |>
+        filter(Age == "Child") |>
+        group_by(Sex, Survived) |>
+        summarize(Freq = seq.int(sum(Freq)), .groups = "drop")
+ggplot(df, aes(x = Survived, y = Freq, fill = Survived)) +
+    facet_grid(cols = vars(Sex)) +
+    coord_fixed() +
+    geom_oblicubes(yoffset = -0.5, zoffset = -0.5, angle = -45, scale = 0.7) +
+    scale_fill_manual(values = c("Yes" = "lightblue", "No" = "red")) +
+    scale_y_continuous(expand = expansion(), name = "") +
+    scale_x_discrete(name = "", breaks = NULL) +
+    labs(title = "Children on the Titanic")
+```
+
+![](man/figures/README-barchart-1.png)
 
 ## <a name="related">Related software</a>
 

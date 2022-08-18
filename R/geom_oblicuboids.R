@@ -20,9 +20,12 @@
 #' @inheritParams ggplot2::geom_rect
 #' @inheritParams oblicuboidsGrob
 #' @param  ... Aesthetics, used to set an aesthetic to a fixed value.
+#' @param xoffset,yoffset,zoffset By default the x,y values are assumed to be the **center** of the cuboid
+#'                                and the z value is assumed to be the **top** of the cuboid.
+#'                                Use `xoffset`, `yoffset`, and/or `zoffset` to shift the x,y,z values a fixed amount.
 #' @seealso `geom_oblicuboids()` is a wrapper around [oblicuboidsGrob()].
 #' @examples
-#' if (require("ggplot2")) {
+#' if (require("ggplot2") && require("dplyr")) {
 #'   data("volcano", package = "datasets")
 #'   df <- xyz_heightmap(volcano, scale = 0.3, min = 1)
 #'   g <- ggplot(df, aes(x, y, z = z, fill = raw)) +
@@ -42,6 +45,21 @@
 #'          coord_fixed() +
 #'          scale_fill_identity()
 #'   plot(g)
+#'
+#'   # Note you probably should not do 3D bar charts...
+#'   df <- as.data.frame(datasets::Titanic) |>
+#'           filter(Age == "Child") |>
+#'           group_by(Sex, Survived) |>
+#'           summarize(Freq = seq.int(sum(Freq)), .groups = "drop")
+#'   g <- ggplot(df, aes(x = Survived, y = Freq, fill = Survived)) +
+#'       facet_grid(cols = vars(Sex)) +
+#'       coord_fixed() +
+#'       geom_oblicuboids(yoffset = -0.5, scale = 0.7, angle = -45) +
+#'       scale_fill_manual(values = c("Yes" = "lightblue", "No" = "red")) +
+#'       scale_y_continuous(expand = expansion(), name = "") +
+#'       scale_x_discrete(name = "", breaks = NULL) +
+#'       labs(title = "Children on the Titanic")
+#'   plot(g)
 #' }
 #' @export
 geom_oblicuboids <- function(mapping = NULL, data = NULL,
@@ -49,6 +67,9 @@ geom_oblicuboids <- function(mapping = NULL, data = NULL,
                        ...,
                        angle = 45,
                        scale = 0.5,
+                       xoffset = 0,
+                       yoffset = 0,
+                       zoffset = 0,
                        light = darken_face,
                        show.legend = NA,
                        inherit.aes = TRUE) {
@@ -69,6 +90,9 @@ geom_oblicuboids <- function(mapping = NULL, data = NULL,
             angle = angle,
             scale = scale,
             light = light,
+            xoffset = xoffset,
+            yoffset = yoffset,
+            zoffset = zoffset,
             ...
         )
     )
@@ -94,7 +118,7 @@ create_GeomOblicuboids <- function() { # nocov start
         ggplot2::draw_key_polygon(data, params, size)
     },
     draw_panel = function(self, data, panel_params, coord,
-                          scale, angle, light) {
+                          scale, angle, light, xoffset, yoffset, zoffset) {
         if (coord$is_free()) {
             stop("'geom_oblicuboids()' will not work correctly if not using a fixed scale.")
         }
@@ -102,25 +126,35 @@ create_GeomOblicuboids <- function() { # nocov start
             stop("'geom_oblicuboids()' will not work correctly if not using an aspect ratio of 1.")
         }
         coord <- coord$transform(data, panel_params)
-        grob_cuboids(coord, panel_params, scale, angle, light)
+        grob_cuboids(coord, panel_params, scale, angle, light, xoffset, yoffset, zoffset)
     },
     setup_data = function(data, params) {
+        data$x <- round(data$x, 0)
+        data$y <- round(data$y, 0)
+        if (!hasName(data, "z"))
+            data$z <- round(params[["z"]] %||% 1, 0)
+        else
+            data$z <- as.numeric(data$z)
+
         l <- aabb_cuboids(data,
                         scale = params$scale,
                         angle = params$angle)
-        data$xmin <- l$x_op[1]
-        data$xmax <- l$x_op[2]
-        data$ymin <- l$y_op[1]
-        data$ymax <- l$y_op[2]
+        xoffset <- params$xoffset + z_factor_x(params$scale, params$angle) * params$zoffset
+        yoffset <- params$yoffset + z_factor_y(params$scale, params$angle) * params$zoffset
+        data$xmin <- l$x_op[1] + xoffset
+        data$xmax <- l$x_op[2] + xoffset
+        data$ymin <- l$y_op[1] + yoffset
+        data$ymax <- l$y_op[2] + yoffset
         data
     }
   )
 } # nocov end
 
-grob_cuboids <- function(coord, panel_params, scale, angle, light) {
+grob_cuboids <- function(coord, panel_params, scale, angle, light, xoffset, yoffset, zoffset) {
     grid::gTree(coord = coord,
                 panel_params = panel_params,
                 scale = scale, angle = angle, light = light,
+                xoffset = xoffset, yoffset = yoffset, zoffset = zoffset,
                 cl = "oblicuboids_cuboids_geom")
 }
 
@@ -136,9 +170,11 @@ makeContent.oblicuboids_cuboids_geom <- function(x) {
     xs <- coord$x / x_width + panel_params$x.range[1]
     y <- coord$y / y_width + panel_params$y.range[1]
     z <- coord$z
-    xo <- -panel_params$x.range[1] * x_width
+    xoffset <- x$xoffset + z_factor_x(x$scale, x$angle) * x$zoffset
+    yoffset <- x$yoffset + z_factor_y(x$scale, x$angle) * x$zoffset
+    xo <- (-panel_params$x.range[1] + xoffset) * x_width
     xo <- convertX(unit(xo, "npc"), "bigpts")
-    yo <- -panel_params$y.range[1] * y_width
+    yo <- (-panel_params$y.range[1] + yoffset) * y_width
     yo <- convertY(unit(yo, "npc"), "bigpts")
     gp <- gpar(
           col  = coord$colour,

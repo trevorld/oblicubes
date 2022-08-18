@@ -12,16 +12,19 @@ geom_oblicubes(
   ...,
   angle = 45,
   scale = 0.5,
+  xoffset = 0,
+  yoffset = 0,
+  zoffset = 0,
   light = darken_face,
   show.legend = NA,
   inherit.aes = TRUE
 )
 }
 \arguments{
-\item{mapping}{Set of aesthetic mappings created by \code{\link[ggplot2:aes]{aes()}} or
-\code{\link[ggplot2:aes_]{aes_()}}. If specified and \code{inherit.aes = TRUE} (the
-default), it is combined with the default mapping at the top level of the
-plot. You must supply \code{mapping} if there is no plot mapping.}
+\item{mapping}{Set of aesthetic mappings created by \code{\link[ggplot2:aes]{aes()}}. If specified and
+\code{inherit.aes = TRUE} (the default), it is combined with the default mapping
+at the top level of the plot. You must supply \code{mapping} if there is no plot
+mapping.}
 
 \item{data}{The data to be displayed in this layer. There are three
 options:
@@ -56,6 +59,9 @@ settings of the adjustment.}
 0.5 corresponds to the \dQuote{cabinet projection}.
 1.0 corresponds to the \dQuote{cavalier projection}.
 0.0 corresponds to a \dQuote{primary view orthographic projection}.}
+
+\item{xoffset, yoffset, zoffset}{By default the x,y,z values are assumed to be the \strong{center} of the cube.
+Use \code{xoffset}, \code{yoffset}, and/or \code{zoffset} to shift the x,y,z values a fixed amount.}
 
 \item{light}{If \code{FALSE} don't perform a "light" effect.
 Otherwise a function that takes two arguments:
@@ -98,7 +104,7 @@ See \code{\link[=oblicubesGrob]{oblicubesGrob()}} for more details.
 }
 
 \examples{
-if (require("ggplot2")) {
+if (require("ggplot2") && require("dplyr")) {
   data("volcano", package = "datasets")
   df <- xyz_heightmap(volcano, scale = 0.3, min = 1)
   g <- ggplot(df, aes(x, y, z = z, fill = raw)) +
@@ -117,6 +123,22 @@ if (require("ggplot2")) {
          geom_oblicubes() +
          coord_fixed() +
          scale_fill_identity()
+  plot(g)
+
+  # Note you probably should not do 3D bar charts...
+  df <- as.data.frame(datasets::Titanic) |>
+          filter(Age == "Child") |>
+          group_by(Sex, Survived) |>
+          summarize(Freq = seq.int(sum(Freq)), .groups = "drop")
+  g <- ggplot(df, aes(x = Survived, y = Freq, fill = Survived)) +
+      facet_grid(cols = vars(Sex)) +
+      coord_fixed() +
+      geom_oblicubes(yoffset = -0.5, zoffset = -0.5,
+                     scale = 0.7, angle = -45) +
+      scale_fill_manual(values = c("Yes" = "lightblue", "No" = "red")) +
+      scale_y_continuous(expand = expansion(), name = "") +
+      scale_x_discrete(name = "", breaks = NULL) +
+      labs(title = "Children on the Titanic")
   plot(g)
 }
 }

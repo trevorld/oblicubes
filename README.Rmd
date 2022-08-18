@@ -15,12 +15,13 @@
   + [Generating fake terrain](#terrain)
   + [Bitmap fonts](#bitmap)
   + [Pseudo 3D images](#pseudo)
+  + [3D bar charts](#3dbar)
 
 * [Related software](#related)
 
 ## <a name="overview">Overview</a>
 
-`{oblicubes}` is an extension for [coolbutuseless's](https://github.com/coolbutuseless) [{isocubes}](https://github.com/coolbutuseless/isocubes) that supports 3D graphics in `{grid}` by rendering cubes/cuboids with an [oblique projection](https://en.wikipedia.org/wiki/Oblique_projection) (instead of an [isometric projection](https://en.wikipedia.org/wiki/Isometric_projection)).  As a special case we also support "primary view orthographic projections" as well.  Like `{isocubes}` the `{oblicubes}` package only supports rendering non-rotated cubes (and cuboids) placed at integer coordinates.  If you need to do more complex oblique projections you'll need to use a package like [{piecepackr}](https://github.com/piecepackr/piecepackr) which supports additional shapes, supports adding art/text to their faces, rotating shapes, placing shapes at non-integer coordinates, etc.
+`{oblicubes}` is an extension for [coolbutuseless's](https://github.com/coolbutuseless) [{isocubes}](https://github.com/coolbutuseless/isocubes) that supports 3D graphics in `{grid}` and `{ggplot2}` by rendering cubes/cuboids with an [oblique projection](https://en.wikipedia.org/wiki/Oblique_projection) (instead of an [isometric projection](https://en.wikipedia.org/wiki/Isometric_projection)).  As a special case we also support "primary view orthographic projections" as well.  Like `{isocubes}` the `{oblicubes}` package only supports rendering non-rotated cubes (and cuboids) placed at integer coordinates.  If you need to do more complex oblique projections you'll need to use a package like [{piecepackr}](https://github.com/piecepackr/piecepackr) which supports additional shapes, supports adding art/text to their faces, rotating shapes, placing shapes at non-integer coordinates, etc.
 
 | `{oblicubes}` | `{isocubes}` |
 |---|---|
@@ -144,8 +145,7 @@ grid.oblicuboids(coords, gp = gpar(col = NA))
 ### <a name="bitmap">Bitmap fonts</a>
 
 ```{r bitmap_font, fig.asp = 0.3}
-# `{bittermelon}` creates a generic `which()` which defaults to `base::which()`
-library("bittermelon", warn.conflicts = FALSE)
+library("bittermelon")
 font_file <- system.file("fonts/spleen/spleen-8x16.hex.gz", package = "bittermelon")
 font <- read_hex(font_file)
 bml <- as_bm_list("RSTATS", font = font)
@@ -200,6 +200,29 @@ grid.oblicuboids(df, scale=0.5, gp=gpar(col=NA),
                  vp = viewport(x=0.75, width=0.5))
 grid.text("Pseudo 3D derivative (based on luminosity)",
           x=0.76, y = 0.75, gp = gpar(col = "white"))
+```
+
+### <a name="3dbar">3D bar charts</a>
+
+* **Should** you ever make a 3D bar chart?  Probably not...
+* If you have integer valued y-values **could** you use `{oblicubes}` to make a 3D bar chart?  With some work...
+* You can use `yoffset` and `zoffset` parameters to shift cubes so the top/bottom of the cubes lie on integer values (instead of the center of the cubes)
+
+```{r barchart}
+library("dplyr")
+library("ggplot2")
+df <- as.data.frame(datasets::Titanic) |>
+        filter(Age == "Child") |>
+        group_by(Sex, Survived) |>
+        summarize(Freq = seq.int(sum(Freq)), .groups = "drop")
+ggplot(df, aes(x = Survived, y = Freq, fill = Survived)) +
+    facet_grid(cols = vars(Sex)) +
+    coord_fixed() +
+    geom_oblicubes(yoffset = -0.5, zoffset = -0.5, angle = -45, scale = 0.7) +
+    scale_fill_manual(values = c("Yes" = "lightblue", "No" = "red")) +
+    scale_y_continuous(expand = expansion(), name = "") +
+    scale_x_discrete(name = "", breaks = NULL) +
+    labs(title = "Children on the Titanic")
 ```
 
 ## <a name="related">Related software</a>

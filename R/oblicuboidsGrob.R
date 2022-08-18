@@ -77,8 +77,8 @@ oblicuboidsGrob <- function(x, y = NULL, z = NULL,
         x <- round(x, 0)
     if (!is.integer(y))
         y <- round(y, 0)
-    if (!is.integer(z))
-        z <- round(z, 0)
+    if (!is.numeric(z))
+        z <- as.numeric(z)
     angle <- angle %% 360
 
     if (is.null(width) || is.null(xo) || is.null(yo))
