@@ -127,18 +127,17 @@ if (require("ggplot2") && require("dplyr")) {
 
   # Note you probably should not do 3D bar charts...
   df <- as.data.frame(datasets::Titanic) |>
-          filter(Age == "Child") |>
-          group_by(Sex, Survived) |>
+          filter(Age == "Child", Freq > 0) |>
+          group_by(Sex, Survived, Class) |>
           summarize(Freq = seq.int(sum(Freq)), .groups = "drop")
   g <- ggplot(df, aes(x = Survived, y = Freq, fill = Survived)) +
-      facet_grid(cols = vars(Sex)) +
+      facet_grid(cols = vars(Class, Sex)) +
       coord_fixed() +
-      geom_oblicubes(yoffset = -0.5, zoffset = -0.5,
-                     scale = 0.7, angle = -45) +
+      geom_oblicubes(yoffset = -0.5, zoffset = -0.5, angle = -45, scale = 0.7) +
       scale_fill_manual(values = c("Yes" = "lightblue", "No" = "red")) +
       scale_y_continuous(expand = expansion(), name = "") +
       scale_x_discrete(name = "", breaks = NULL) +
-      labs(title = "Children on the Titanic")
+      labs(title = "Children on the Titanic (by ticket class)")
   plot(g)
 }
 }
