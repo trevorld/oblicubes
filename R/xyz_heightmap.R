@@ -68,7 +68,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables("z")
 #'   grid.oblicubes(coords, scale = 0, width = width, gp = gpar(col=NA))
 #'   popViewport()
 #' }
-#' if (require("ggplot2")) {
+#' if (require("grDevices") && require("ggplot2")) {
 #'   data("volcano", package = "datasets")
 #'   df <- xyz_heightmap(volcano, scale = 0.3, min = 1, solid = FALSE)
 #'   g <- ggplot(df, aes(x, y, z = z, fill = raw)) +

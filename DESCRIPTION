@@ -7,7 +7,7 @@ Authors@R: c(person("Trevor L", "Davis", role = c("aut", "cre"),
                     comment = c(ORCID = "0000-0001-6341-4639")),
              person("Mike", "FC", role = "aut", comment = "Some code adapted from isocubes"))
 Description: Provides functions for 3D rendering in 'grid' and 'ggplot2' graphics via an oblique projection using cubes and cuboids.  Also supports 2D rendering via a primary view orthographic projection.  Can be viewed as an extension to the 'isocubes' package <https://github.com/coolbutuseless/isocubes>.
-URL: https://trevorldavis.com/R/oblicubes/dev
+URL: https://trevorldavis.com/R/oblicubes/dev/
 BugReports: https://github.com/trevorld/oblicubes/issues
 License: MIT + file LICENSE
 Imports:
@@ -18,8 +18,11 @@ Suggests:
     datasets,
     dplyr,
     ggplot2,
+    knitr,
+    rmarkdown,
     testthat (>= 3.0.0),
     vdiffr
+VignetteBuilder: knitr, rmarkdown
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.1

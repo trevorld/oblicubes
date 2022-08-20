@@ -1,8 +1,11 @@
-# oblicubes <img src="man/figures/logo.png" align="right" width="200px" alt="oblicubes hex sticker">
-
-[![CRAN Status Badge](https://www.r-pkg.org/badges/version/oblicubes)](https://cran.r-project.org/package=oblicubes)
-[![R-CMD-check](https://github.com/trevorld/oblicubes/workflows/R-CMD-check/badge.svg)](https://github.com/trevorld/oblicubes/actions)
-[![Coverage Status](https://codecov.io/gh/trevorld/oblicubes/branch/main/graph/badge.svg?token=WV34OH5BI9)](https://app.codecov.io/gh/trevorld/oblicubes)
+---
+title: "Introduction to oblicubes"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to oblicubes}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
 
 ### Table of Contents
 
@@ -40,16 +43,7 @@ Inspired by [cj-holmes](https://github.com/cj-holmes)'s [{isocuboids}](https://g
 | Use `xyz_heightmap(solid = FALSE)` to create x,y,z coordinates | Coordinates generated within image rendering functions |
 | Use `oblicuboidsGrob()`, `grid.oblicuboids()`, or `geom_oblicuboids()` to render image | Use `cuboid_matrix()`, `cuboid_image()` to render image |
 
-## <a name="installation">Installation</a>
-
-
-```r
-remotes::install_github("trevorld/oblicubes")
-```
-
 ## <a name="examples">Examples</a>
-
-
 
 ### <a name="oblique">Different oblique projections</a>
 
@@ -79,7 +73,7 @@ for (i in 1:9) {
 }
 ```
 
-![](man/figures/README-angles-1.png)
+![](../man/figures/README-angles-1.png)
 
 ### <a name="volcano">Volcano heightmap</a>
 
@@ -101,7 +95,7 @@ g <- ggplot(df, aes(x, y, z = z, fill = raw)) +
 plot(g)
 ```
 
-![](man/figures/README-volcano_oblique-1.png)
+![](../man/figures/README-volcano_oblique-1.png)
 
 * By playing around with the `flipx`, `flipy`, `ground` arguments in `xyz_coords()` it is also possible to generate views from different sides of the object.  
 * A `scale` of 0 gives you a "primary view orthographic projection".
@@ -133,7 +127,7 @@ grid.oblicubes(coords, scale = 0, width = width, gp = gpar(col=NA))
 popViewport()
 ```
 
-![](man/figures/README-volcano_orthographic-1.png)
+![](../man/figures/README-volcano_orthographic-1.png)
 
 ### <a name="terrain">Generating fake terrain</a>
 
@@ -151,7 +145,7 @@ coords <- xyz_heightmap(mat, col = grDevices::topo.colors, solid = FALSE)
 grid.oblicuboids(coords, gp = gpar(col = NA))
 ```
 
-![](man/figures/README-terrain_cuboids-1.png)
+![](../man/figures/README-terrain_cuboids-1.png)
 
 ### <a name="bitmap">Bitmap fonts</a>
 
@@ -188,13 +182,13 @@ coords <- xyz_heightmap(bm, col = col, flipy=FALSE)
 grid.oblicubes(coords, width=unit(2.2, "mm"))
 ```
 
-![](man/figures/README-bitmap_font-1.png)
+![](../man/figures/README-bitmap_font-1.png)
 
 ### <a name="pseudo">Pseudo 3D images</a>
 
 * [cj-holmes](https://github.com/cj-holmes)'s [{isocuboids}](https://github.com/cj-holmes/isocuboids) package has awesome builtin pseudo 3D image support
 * With some work one can also do pseudo 3D images with `{oblicubes}`
-* Image credit: Ivory model of a half a human head, half a skull, Europe, undated. [Science Museum, London](https://wellcomecollection.org/works/z3syda8c). [Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/)
+* Image credit: Ivory model of a half a human head, half a skull, Europe, undated. [Science Museum, London](https://wellcomecollection.org/works/z3syda8c). [Attribution 4.0 International (CC BY 4.0)](http://creativecommons.org/licenses/by/4.0/)
 
 
 ```r
@@ -244,7 +238,7 @@ grid.text("Pseudo 3D derivative (based on luminosity)",
           x=0.76, y = 0.75, gp = gpar(col = "white"))
 ```
 
-![](man/figures/README-skull-1.png)
+![](../man/figures/README-skull-1.png)
 
 ### <a name="3dbar">3D bar charts</a>
 
@@ -290,7 +284,7 @@ ggplot(df, aes(x = Survived, y = Freq, fill = Survived)) +
     labs(title = "Children on the Titanic (by ticket class)")
 ```
 
-![](man/figures/README-barchart-1.png)
+![](../man/figures/README-barchart-1.png)
 
 ## <a name="related">Related software</a>
 

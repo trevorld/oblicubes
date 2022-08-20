@@ -5,8 +5,32 @@
 #' @importFrom grDevices rgb col2rgb
 #' @export
 #' @examples
-#'   cheap_darken("blue", 0.5)
-#'   darken_face("top", "blue")
+#' demo_light <- function(light = darken_face, ...) {
+#'   df <- data.frame(x=1, y=1, z=1)
+#'   grid::grid.newpage()
+#'   grid.oblicubes(df, ..., light=light, angle=45, lwd=4,
+#'                  vp = grid::viewport(0.25, 0.25, 0.5, 0.5))
+#'   grid.oblicubes(df, ..., light=light, angle=135, lwd=4,
+#'                  vp = grid::viewport(0.75, 0.25, 0.5, 0.5))
+#'   grid.oblicubes(df, ..., light=light, angle=-45, lwd=4,
+#'                  vp = grid::viewport(0.25, 0.75, 0.5, 0.5))
+#'   grid.oblicubes(df, ..., light=light, angle=-135, lwd=4,
+#'                  vp = grid::viewport(0.75, 0.75, 0.5, 0.5))
+#' }
+#' demo_light()
+#' demo_light(fill = "gold")
+#' demo_light(light = function(face, col)
+#'              darken_face(face, col, west = 0.6, east = 0.6,
+#'                          south = 0.3, north = 0.3)
+#' )
+#' demo_light(light = function(face, col)
+#'              switch(face,
+#'                top = "grey90",
+#'                west = "red",
+#'                east = "green",
+#'                south = "blue",
+#'                north = "yellow")
+#' )
 #' @rdname light_helpers
 cheap_darken <- function(col, amount) {
   mat <- col2rgb(col, alpha = TRUE)
@@ -22,7 +46,8 @@ cheap_darken <- function(col, amount) {
 #'  [oblicuboidsGrob()], and [grid.oblicuboids()].
 #' `cheap_darken()` is the default darkening function used by `darken_face()`.
 #'
-#' The `light` argument of [oblicubesGrob()], [grid.oblicubes()], [oblicuboidsGrob()], and [grid.oblicuboids()]
+#' The `light` argument of [oblicubesGrob()], [grid.oblicubes()], [geom_oblicubes()],
+#' [oblicuboidsGrob()], [grid.oblicuboids()], and [geom_oblicuboids()]
 #' needs a function that that takes two arguments: the first is `face` one of its five faces:
 #' "top", "west", "east", "south", or "north" and the second is `col` the cube/cuboid's fill color
 #'

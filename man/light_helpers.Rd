@@ -51,11 +51,36 @@ for \code{\link[=oblicubesGrob]{oblicubesGrob()}}, \code{\link[=grid.oblicubes]{
 \code{cheap_darken()} is the default darkening function used by \code{darken_face()}.
 }
 \details{
-The \code{light} argument of \code{\link[=oblicubesGrob]{oblicubesGrob()}}, \code{\link[=grid.oblicubes]{grid.oblicubes()}}, \code{\link[=oblicuboidsGrob]{oblicuboidsGrob()}}, and \code{\link[=grid.oblicuboids]{grid.oblicuboids()}}
+The \code{light} argument of \code{\link[=oblicubesGrob]{oblicubesGrob()}}, \code{\link[=grid.oblicubes]{grid.oblicubes()}}, \code{\link[=geom_oblicubes]{geom_oblicubes()}},
+\code{\link[=oblicuboidsGrob]{oblicuboidsGrob()}}, \code{\link[=grid.oblicuboids]{grid.oblicuboids()}}, and \code{\link[=geom_oblicuboids]{geom_oblicuboids()}}
 needs a function that that takes two arguments: the first is \code{face} one of its five faces:
 "top", "west", "east", "south", or "north" and the second is \code{col} the cube/cuboid's fill color
 }
 \examples{
-  cheap_darken("blue", 0.5)
-  darken_face("top", "blue")
+demo_light <- function(light = darken_face, ...) {
+  df <- data.frame(x=1, y=1, z=1)
+  grid::grid.newpage()
+  grid.oblicubes(df, ..., light=light, angle=45, lwd=4,
+                 vp = grid::viewport(0.25, 0.25, 0.5, 0.5))
+  grid.oblicubes(df, ..., light=light, angle=135, lwd=4,
+                 vp = grid::viewport(0.75, 0.25, 0.5, 0.5))
+  grid.oblicubes(df, ..., light=light, angle=-45, lwd=4,
+                 vp = grid::viewport(0.25, 0.75, 0.5, 0.5))
+  grid.oblicubes(df, ..., light=light, angle=-135, lwd=4,
+                 vp = grid::viewport(0.75, 0.75, 0.5, 0.5))
+}
+demo_light()
+demo_light(fill = "gold")
+demo_light(light = function(face, col)
+             darken_face(face, col, west = 0.6, east = 0.6,
+                         south = 0.3, north = 0.3)
+)
+demo_light(light = function(face, col)
+             switch(face,
+               top = "grey90",
+               west = "red",
+               east = "green",
+               south = "blue",
+               north = "yellow")
+)
 }

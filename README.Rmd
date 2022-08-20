@@ -2,7 +2,7 @@
 
 [![CRAN Status Badge](https://www.r-pkg.org/badges/version/oblicubes)](https://cran.r-project.org/package=oblicubes)
 [![R-CMD-check](https://github.com/trevorld/oblicubes/workflows/R-CMD-check/badge.svg)](https://github.com/trevorld/oblicubes/actions)
-[![Coverage Status](https://codecov.io/gh/trevorld/oblicubes/branch/main/graph/badge.svg?token=WV34OH5BI9)](https://codecov.io/gh/trevorld/oblicubes)
+[![Coverage Status](https://codecov.io/gh/trevorld/oblicubes/branch/main/graph/badge.svg?token=WV34OH5BI9)](https://app.codecov.io/gh/trevorld/oblicubes)
 
 ### Table of Contents
 
@@ -166,7 +166,7 @@ grid.oblicubes(coords, width=unit(2.2, "mm"))
 
 * [cj-holmes](https://github.com/cj-holmes)'s [{isocuboids}](https://github.com/cj-holmes/isocuboids) package has awesome builtin pseudo 3D image support
 * With some work one can also do pseudo 3D images with `{oblicubes}`
-* Image credit: Ivory model of a half a human head, half a skull, Europe, undated. [Science Museum, London](https://wellcomecollection.org/works/z3syda8c). [Attribution 4.0 International (CC BY 4.0)](http://creativecommons.org/licenses/by/4.0/)
+* Image credit: Ivory model of a half a human head, half a skull, Europe, undated. [Science Museum, London](https://wellcomecollection.org/works/z3syda8c). [Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/)
 
 ```{r skull}
 library("grid")

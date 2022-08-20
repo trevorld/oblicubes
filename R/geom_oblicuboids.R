@@ -24,8 +24,9 @@
 #'                                and the z value is assumed to be the **top** of the cuboid.
 #'                                Use `xoffset`, `yoffset`, and/or `zoffset` to shift the x,y,z values a fixed amount.
 #' @seealso `geom_oblicuboids()` is a wrapper around [oblicuboidsGrob()].
+#' @return A ggplot2 geom.
 #' @examples
-#' if (require("ggplot2") && require("dplyr")) {
+#' if (require("ggplot2")) {
 #'   data("volcano", package = "datasets")
 #'   df <- xyz_heightmap(volcano, scale = 0.3, min = 1)
 #'   g <- ggplot(df, aes(x, y, z = z, fill = raw)) +
@@ -36,7 +37,8 @@
 #'          labs(x = "East (10m)", y = "North (10m)",
 #'               title = "Maungawhau (`datasets::volcano`)")
 #'   plot(g)
-#'
+#' }
+#' if (require("ggplot2")) {
 #'   # Using `scale_fill_identity()` if using `xyz_heightmap()`'s `fill` column
 #'   df <- xyz_heightmap(volcano, scale = 0.3, min = 1,
 #'                       col = grDevices::heat.colors)
@@ -45,7 +47,8 @@
 #'          coord_fixed() +
 #'          scale_fill_identity()
 #'   plot(g)
-#'
+#' }
+#' if (require("ggplot2") && require("dplyr")) {
 #'   # Note you probably should not do 3D bar charts...
 #'   df <- as.data.frame(datasets::Titanic) |>
 #'           filter(Age == "Child", Freq > 0) |>

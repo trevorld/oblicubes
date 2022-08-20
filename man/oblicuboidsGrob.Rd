@@ -119,13 +119,12 @@ if (require("grid")) {
           grid.text(paste("scale = 0"), y=0.92, gp = gpar(cex = 1.2))
       popViewport()
   }
-
-  # volcano example
-  mat <- datasets::volcano
-  mat <- 0.3 * (mat - min(mat)) + 1.0
-  coords <- xyz_heightmap(mat, col = grDevices::terrain.colors,
-                          solid = FALSE)
-  grid.newpage()
-  grid.oblicuboids(coords)
 }
+# volcano example
+mat <- datasets::volcano
+mat <- 0.3 * (mat - min(mat)) + 1.0
+coords <- xyz_heightmap(mat, col = grDevices::terrain.colors,
+                        solid = FALSE)
+grid::grid.newpage()
+grid.oblicuboids(coords)
 }
