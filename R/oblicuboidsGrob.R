@@ -117,7 +117,7 @@ makeContent.oblicubes_cuboids_grob <- function(x) {
     if (!inherits(width, "unit"))
         width <- unit(width, x$default.units)
     if (is.null(xo))
-        xo <- (l$x[1]-l$x_op[1]-0.5) * width + unit(0.01, "snpc")
+        xo <- -l$x_op[1] * width + unit(0.01, "snpc")
     if (!inherits(xo, "unit"))
         xo <- unit(xo, x$default.units)
     if (is.null(yo))

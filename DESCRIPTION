@@ -1,7 +1,7 @@
 Package: oblicubes
 Type: Package
 Title: Obliquely Projected Cubes and Cuboids
-Version: 0.1.0-11
+Version: 0.1.0-12
 Authors@R: c(person("Trevor L", "Davis", role = c("aut", "cre"),
                     email = "trevor.l.davis@gmail.com",
                     comment = c(ORCID = "0000-0001-6341-4639")),

@@ -37,6 +37,7 @@
 #'               title = "Maungawhau (`datasets::volcano`)")
 #'   plot(g)
 #' }
+#' \donttest{
 #' if (require("ggplot2")) {
 #'   # Using `scale_fill_identity()` if using `xyz_heightmap()`'s `fill` column
 #'   df <- xyz_heightmap(volcano, scale = 0.3, min = 1,
@@ -46,6 +47,7 @@
 #'          coord_fixed() +
 #'          scale_fill_identity()
 #'   plot(g)
+#' }
 #' }
 #' if (require("ggplot2") && require("dplyr")) {
 #'   # Note you probably should not do 3D bar charts...
