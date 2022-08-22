@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' class='svglite' data-engine-version='2.0' width='720.00pt' height='576.00pt' viewBox='0 0 720.00 576.00'>
+<defs>
+  <style type='text/css'><![CDATA[
+    .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {
+      fill: none;
+      stroke: #000000;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-miterlimit: 10.00;
+    }
+  ]]></style>
+</defs>
+<rect width='100%' height='100%' style='stroke: none; fill: #FFFFFF;'/>
+<defs>
+  <clipPath id='cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA='>
+    <rect x='0.00' y='0.00' width='720.00' height='576.00' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
+<polygon points='353.16,75.23 353.16,222.84 500.77,222.84 500.77,75.23 ' style='stroke-width: 0.75; fill: #E5E5E5;' />
+<polygon points='300.98,127.41 300.98,275.02 353.16,222.84 353.16,75.23 ' style='stroke-width: 0.75; fill: #B7B7B7;' />
+<polygon points='300.98,275.02 448.59,275.02 500.77,222.84 353.16,222.84 ' style='stroke-width: 0.75; fill: #898989;' />
+<polygon points='257.74,23.04 257.74,170.65 405.35,170.65 405.35,23.04 ' style='stroke-width: 0.75; fill: #E5E5E5;' />
+<polygon points='153.37,127.41 153.37,275.02 257.74,170.65 257.74,23.04 ' style='stroke-width: 0.75; fill: #B7B7B7;' />
+<polygon points='153.37,275.02 300.98,275.02 405.35,170.65 257.74,170.65 ' style='stroke-width: 0.75; fill: #898989;' />
+<polygon points='57.95,75.23 57.95,222.84 205.56,222.84 205.56,75.23 ' style='stroke-width: 0.75; fill: #E5E5E5;' />
+<polygon points='5.76,127.41 5.76,275.02 57.95,222.84 57.95,75.23 ' style='stroke-width: 0.75; fill: #B7B7B7;' />
+<polygon points='5.76,275.02 153.37,275.02 205.56,222.84 57.95,222.84 ' style='stroke-width: 0.75; fill: #898989;' />
+<polygon points='405.35,170.65 405.35,318.26 552.96,318.26 552.96,170.65 ' style='stroke-width: 0.75; fill: #E5E5E5;' />
+<polygon points='300.98,275.02 300.98,422.63 405.35,318.26 405.35,170.65 ' style='stroke-width: 0.75; fill: #B7B7B7;' />
+<polygon points='300.98,422.63 448.59,422.63 552.96,318.26 405.35,318.26 ' style='stroke-width: 0.75; fill: #898989;' />
+<polygon points='309.93,118.46 309.93,266.07 457.54,266.07 457.54,118.46 ' style='stroke-width: 0.75; fill: #E5E5E5;' />
+<polygon points='153.37,275.02 153.37,422.63 309.93,266.07 309.93,118.46 ' style='stroke-width: 0.75; fill: #B7B7B7;' />
+<polygon points='153.37,422.63 300.98,422.63 457.54,266.07 309.93,266.07 ' style='stroke-width: 0.75; fill: #898989;' />
+<polygon points='110.13,170.65 110.13,318.26 257.74,318.26 257.74,170.65 ' style='stroke-width: 0.75; fill: #E5E5E5;' />
+<polygon points='5.76,275.02 5.76,422.63 110.13,318.26 110.13,170.65 ' style='stroke-width: 0.75; fill: #B7B7B7;' />
+<polygon points='5.76,422.63 153.37,422.63 257.74,318.26 110.13,318.26 ' style='stroke-width: 0.75; fill: #898989;' />
+<polygon points='353.16,370.44 353.16,518.05 500.77,518.05 500.77,370.44 ' style='stroke-width: 0.75; fill: #E5E5E5;' />
+<polygon points='300.98,422.63 300.98,570.24 353.16,518.05 353.16,370.44 ' style='stroke-width: 0.75; fill: #B7B7B7;' />
+<polygon points='300.98,570.24 448.59,570.24 500.77,518.05 353.16,518.05 ' style='stroke-width: 0.75; fill: #898989;' />
+<polygon points='257.74,318.26 257.74,465.87 405.35,465.87 405.35,318.26 ' style='stroke-width: 0.75; fill: #E5E5E5;' />
+<polygon points='153.37,422.63 153.37,570.24 257.74,465.87 257.74,318.26 ' style='stroke-width: 0.75; fill: #B7B7B7;' />
+<polygon points='153.37,570.24 300.98,570.24 405.35,465.87 257.74,465.87 ' style='stroke-width: 0.75; fill: #898989;' />
+<polygon points='57.95,370.44 57.95,518.05 205.56,518.05 205.56,370.44 ' style='stroke-width: 0.75; fill: #E5E5E5;' />
+<polygon points='5.76,422.63 5.76,570.24 57.95,518.05 57.95,370.44 ' style='stroke-width: 0.75; fill: #B7B7B7;' />
+<polygon points='5.76,570.24 153.37,570.24 205.56,518.05 57.95,518.05 ' style='stroke-width: 0.75; fill: #898989;' />
+</g>
+</svg>

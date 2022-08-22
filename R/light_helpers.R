@@ -20,17 +20,19 @@
 #' demo_light()
 #' demo_light(fill = "gold")
 #' demo_light(light = function(face, col)
-#'              darken_face(face, col, west = 0.6, east = 0.6,
-#'                          south = 0.3, north = 0.3)
+#'              darken_face(face, col, top = 0.3,
+#'                          west = 0.6, east = 0.6,
+#'                          south = 0.0, north = 0.0)
 #' )
-#' demo_light(light = function(face, col)
+#' demo_light(light = function(face, col) {
+#'              n <- length(col)
 #'              switch(face,
-#'                top = "grey90",
-#'                west = "red",
-#'                east = "green",
-#'                south = "blue",
-#'                north = "yellow")
-#' )
+#'                top = rep_len("grey90", n),
+#'                west = rep_len("red", n),
+#'                east = rep_len("green", n),
+#'                south = rep_len("blue", n),
+#'                north = rep_len("yellow", n))
+#'            })
 #' @rdname light_helpers
 cheap_darken <- function(col, amount) {
   mat <- col2rgb(col, alpha = TRUE)
@@ -51,8 +53,8 @@ cheap_darken <- function(col, amount) {
 #' needs a function that that takes two arguments: the first is `face` one of its five faces:
 #' "top", "west", "east", "south", or "north" and the second is `col` the cube/cuboid's fill color
 #'
-#' @param col Color to darken
 #' @param face Cube/cuboid face to color.  One of "top", "west", "east", "south", or "north".
+#' @param col Vector of colors to darken
 #' @param top Amount to darken the "top" face.
 #' @param west Amount to darken the "west" face.
 #' @param east Amount to darken the "east" face.

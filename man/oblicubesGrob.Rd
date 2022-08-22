@@ -43,11 +43,13 @@ grid.oblicubes(
 }
 \arguments{
 \item{x}{Integer vector of x coordinates (if necessary will be rounded to integers).
-May be a \code{data.frame} of x,y,z coordinates.}
+May be a \code{data.frame} of x,y,z coordinates (and maybe fill color).}
 
-\item{y}{Integer vector of y coordinates (if necessary will be rounded to integers).}
+\item{y}{Integer vector of y coordinates (if necessary will be rounded to integers).
+If \code{NULL} and \code{x} is a data frame with a \code{y} column then we use that instead.}
 
-\item{z}{Integer vector of z coordinates (if necessary will be rounded to integers).}
+\item{z}{Integer vector of z coordinates (if necessary will be rounded to integers).
+If \code{NULL} and \code{x} is a data frame with a \code{z} column then we use that instead.}
 
 \item{...}{Passed to \code{\link[grid:gpar]{grid::gpar()}}.  Will override any values set in \code{gp}.}
 

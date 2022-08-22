@@ -1,12 +1,12 @@
 get_fill <- function(fill, x, gp) {
     if (!is.null(fill)) {
         fill
-    } else if (hasName(x, "fill")) {
-        x$fill
-    } else if (hasName(x, "col")) { # isocubes::coords_heightmap
-        x$col
     } else if (hasName(gp, "fill")) {
         gp$fill
+    } else if (hasName(x, "fill")) {
+        x$fill
+    } else if (hasName(x, "col")) { # isocubes::coords_heightmap()
+        x$col
     } else {
         "grey90"
     }

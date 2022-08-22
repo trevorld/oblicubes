@@ -25,4 +25,16 @@ test_that("`oblicuboidsGrob()`", {
           popViewport()
       }
     })
+    expect_doppelganger("null", function() {
+        grid.oblicuboids(data.frame(x = integer(0), y = integer(0), z = integer(0)))
+    })
+    expect_doppelganger("null2", function() {
+        grid.oblicuboids(x = integer(0), y = integer(0), z = integer(0))
+    })
+
+    expect_doppelganger("test_default", function() {
+        mat <- matrix(c(1, 2, 1, 2, 3, 2, 1, 2, 1), nrow = 3, ncol = 3, byrow = TRUE)
+        df <- xyz_heightmap(mat)
+        grid.oblicuboids(df)
+    })
 })

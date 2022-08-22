@@ -6,11 +6,13 @@
 #' As a special case may also render a 2D primary view orthographic projection.
 #' @inheritParams oblicubesGrob
 #' @param x Integer vector of x coordinates (if necessary will be rounded to integers).
-#'          May be a `data.frame` of x,y,z coordinates.
+#'          May be a `data.frame` of x,y,z coordinates (and maybe fill color).
 #'          This will be the x-value at the *center* of the cuboid.
 #' @param y Integer vector of y coordinates (if necessary will be rounded to integers).
+#'          If `NULL` and `x` is a data frame with a `y` column then we use that instead.
 #'          This will be the x-value at the *center* of the cuboid.
 #' @param z Integer vector of z coordinates (if necessary will be rounded to integers).
+#'          If `NULL` and `x` is a data frame with a `z` column then we use that instead.
 #'          This will be the z-value at the *top* of the cuboid.
 #' @param fill Fill color(s) for the cuboids.
 #'             If `NULL` and `x` is a data frame with a `fill` or `col` column then we use that column;
@@ -68,9 +70,16 @@ oblicuboidsGrob <- function(x, y = NULL, z = NULL,
 
     fill <- get_fill(fill, x, gp)
     if (is.data.frame(x)) {
-        z <- x$z
-        y <- x$y
+        if (nrow(x) == 0)
+            return(nullGrob(name = name, vp = vp))
+        if (is.null(y))
+            y <- x$y
+        if (is.null(z))
+            z <- x$z
         x <- x$x
+    } else {
+        if (length(x) == 0)
+            return(nullGrob(name = name, vp = vp))
     }
     if (!is.integer(x))
         x <- round(x, 0)

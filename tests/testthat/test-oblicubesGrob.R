@@ -29,11 +29,17 @@ test_that("`oblicubesGrob()`", {
     expect_doppelganger("ground_yz", function() {
       mat <- matrix(c(1, 2, 1, 2, 3, 2, 1, 2, 1), nrow = 3, ncol = 3, byrow = TRUE)
       coords <- xyz_heightmap(mat, ground="xz")
-      grid.oblicubes(coords, gp = gpar(lwd=4))
+      grid.oblicubes(coords, gp = gpar(lwd=4, fill = "lightgreen"))
     })
     expect_doppelganger("ground_zy", function() {
       mat <- matrix(c(1, 2, 1, 2, 3, 2, 1, 2, 1), nrow = 3, ncol = 3, byrow = TRUE)
       coords <- xyz_heightmap(mat, ground="zy")
-      grid.oblicubes(coords, gp = gpar(lwd=4))
+      grid.oblicubes(coords, lwd = 4)
+    })
+    expect_doppelganger("null", function() {
+        grid.oblicubes(data.frame(x = integer(0), y = integer(0), z = integer(0)))
+    })
+    expect_doppelganger("null2", function() {
+        grid.oblicubes(x = integer(0), y = integer(0), z = integer(0))
     })
 })

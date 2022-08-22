@@ -93,18 +93,12 @@ xyz_heightmap <- function(mat, col = NULL,
   if (!is.null(col) && is.matrix(col)) {
     stopifnot(identical(dim(col), dim(mat)))
   }
-  if (!is.null(raw) && is.matrix(raw)) {
-    stopifnot(identical(dim(raw), dim(mat)))
-  }
 
   # Flip matrix horizontally
   if (isTRUE(flipx)) {
-    mat <- mat[,rev(seq_len(ncol(mat)))]
+    mat <- mat[, rev(seq_len(ncol(mat)))]
     if (!is.null(col) && is.matrix(col)) {
-      col <- col[,rev(seq_len(ncol(col)))]
-    }
-    if (!is.null(raw) && is.matrix(raw)) {
-      raw <- raw[,rev(seq_len(ncol(raw)))]
+      col <- col[, rev(seq_len(ncol(col)))]
     }
   }
 
@@ -113,9 +107,6 @@ xyz_heightmap <- function(mat, col = NULL,
     mat <- mat[rev(seq_len(nrow(mat))), ]
     if (!is.null(col) && is.matrix(col)) {
       col <- col[rev(seq_len(nrow(col))), ]
-    }
-    if (!is.null(raw) && is.matrix(raw)) {
-      raw <- raw[rev(seq_len(nrow(raw))), ]
     }
   }
 

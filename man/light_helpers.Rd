@@ -19,7 +19,7 @@ darken_face(
 )
 }
 \arguments{
-\item{col}{Color to darken}
+\item{col}{Vector of colors to darken}
 
 \item{amount}{Fraction to darken by}
 
@@ -72,15 +72,17 @@ demo_light <- function(light = darken_face, ...) {
 demo_light()
 demo_light(fill = "gold")
 demo_light(light = function(face, col)
-             darken_face(face, col, west = 0.6, east = 0.6,
-                         south = 0.3, north = 0.3)
+             darken_face(face, col, top = 0.3,
+                         west = 0.6, east = 0.6,
+                         south = 0.0, north = 0.0)
 )
-demo_light(light = function(face, col)
+demo_light(light = function(face, col) {
+             n <- length(col)
              switch(face,
-               top = "grey90",
-               west = "red",
-               east = "green",
-               south = "blue",
-               north = "yellow")
-)
+               top = rep_len("grey90", n),
+               west = rep_len("red", n),
+               east = rep_len("green", n),
+               south = rep_len("blue", n),
+               north = rep_len("yellow", n))
+           })
 }

@@ -204,8 +204,8 @@ bm <- (3 * bml) |>
 col <- apply(bm + 1L, c(1, 2), function(i) {
                switch(i, "white", "grey20", "lightblue", "darkblue")
              })
-coords <- xyz_heightmap(bm, col = col, flipy=FALSE)
-grid.oblicubes(coords, width=unit(2.2, "mm"))
+coords <- xyz_heightmap(bm, col = col, flipy = FALSE)
+grid.oblicubes(coords)
 ```
 
 ![](man/figures/README-bitmap_font-1.png)

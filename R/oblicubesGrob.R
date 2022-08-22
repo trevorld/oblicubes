@@ -5,9 +5,11 @@
 #' `grid.oblicubes()` also draws the grob to the graphic device.
 #' As a special case may also render a 2D primary view orthographic projection.
 #' @param x Integer vector of x coordinates (if necessary will be rounded to integers).
-#'          May be a `data.frame` of x,y,z coordinates.
+#'          May be a `data.frame` of x,y,z coordinates (and maybe fill color).
 #' @param y Integer vector of y coordinates (if necessary will be rounded to integers).
+#'          If `NULL` and `x` is a data frame with a `y` column then we use that instead.
 #' @param z Integer vector of z coordinates (if necessary will be rounded to integers).
+#'          If `NULL` and `x` is a data frame with a `z` column then we use that instead.
 #' @param ... Passed to [grid::gpar()].  Will override any values set in `gp`.
 #' @param scale Oblique projection foreshortening factor.
 #'              0.5 corresponds to the \dQuote{cabinet projection}.
@@ -82,9 +84,16 @@ oblicubesGrob <- function(x, y = NULL, z = NULL,
 
     fill <- get_fill(fill, x, gp)
     if (is.data.frame(x)) {
-        z <- x$z
-        y <- x$y
+        if (nrow(x) == 0)
+            return(nullGrob(name = name, vp = vp))
+        if (is.null(y))
+            y <- x$y
+        if (is.null(z))
+            z <- x$z
         x <- x$x
+    } else {
+        if (length(x) == 0)
+            return(nullGrob(name = name, vp = vp))
     }
     if (!is.integer(x))
         x <- round(x, 0)
