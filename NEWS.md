@@ -1,5 +1,5 @@
-oblicubes 0.1 (development)
-===========================
+oblicubes 0.1.1
+===============
 
 New features
 ------------

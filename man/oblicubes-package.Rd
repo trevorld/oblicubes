@@ -13,7 +13,7 @@ Provides functions for 3D rendering in 'grid' and 'ggplot2' graphics via an obli
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://trevorldavis.com/R/oblicubes/dev/}
+  \item \url{https://trevorldavis.com/R/oblicubes/}
   \item Report bugs at \url{https://github.com/trevorld/oblicubes/issues}
 }
 

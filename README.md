@@ -20,9 +20,14 @@
 
 * [Related software](#related)
 
+  + [Oblique projection](#oblique)
+  + [Isometric projection](#isometric)
+  + [Other 3D packages](#related-other)
+  + [Miscellaneous](#related-misc)
+
 ## <a name="overview">Overview</a>
 
-`{oblicubes}` is an extension for [coolbutuseless's](https://github.com/coolbutuseless) [{isocubes}](https://github.com/coolbutuseless/isocubes) that supports 3D graphics in `{grid}` and `{ggplot2}` by rendering cubes/cuboids with an [oblique projection](https://en.wikipedia.org/wiki/Oblique_projection) (instead of an [isometric projection](https://en.wikipedia.org/wiki/Isometric_projection)).  As a special case we also support "primary view orthographic projections" as well.  Like `{isocubes}` the `{oblicubes}` package only supports rendering non-rotated cubes (and cuboids) placed at integer coordinates.  If you need to do more complex oblique projections you'll need to use a package like [{piecepackr}](https://github.com/piecepackr/piecepackr) which supports additional shapes, supports adding art/text to their faces, rotating shapes, placing shapes at non-integer coordinates, etc.
+`{oblicubes}` is an extension for [coolbutuseless's](https://github.com/coolbutuseless) [{isocubes}](https://github.com/coolbutuseless/isocubes) that supports 3D graphics in `{grid}` and `{ggplot2}` by rendering cubes/cuboids with an [oblique projection](https://en.wikipedia.org/wiki/Oblique_projection) (instead of an [isometric projection](https://en.wikipedia.org/wiki/Isometric_projection)).  As a special case we also support "primary view orthographic projections" as well.  Like `{isocubes}` the `{oblicubes}` package only supports rendering non-rotated cubes (and cuboids) placed at integer coordinates.  If you need to do more complex oblique projections you'll need to use a package like [{piecepackr}](https://github.com/piecepackr/piecepackr) which supports additional shapes, supports adding art/text to their faces, rotating shapes, placing shapes at non-integer coordinates, etc.  [Lots of other R packages](#related-other) provide high quality 3D render support for other projections.
 
 | `{oblicubes}` | `{isocubes}` |
 |---|---|
@@ -148,7 +153,7 @@ popViewport()
 
 
 ```r
-library("isocubes")
+library("isocubes") # remotes::install_github("coolbutuseless/isocubes")
 library("oblicubes")
 sphere <- sdf_sphere() |> sdf_scale(40)
 box <- sdf_box() |> sdf_scale(32)
@@ -190,7 +195,7 @@ grid.oblicuboids(coords, gp = gpar(col = NA))
 
 
 ```r
-library("bittermelon", warn.conflicts = FALSE)
+library("bittermelon") |> suppressPackageStartupMessages()
 library("oblicubes")
 font_file <- system.file("fonts/spleen/spleen-8x16.hex.gz", package = "bittermelon")
 font <- read_hex(font_file)
@@ -227,7 +232,7 @@ library("oblicubes")
 # https://wellcomecollection.org/works/z3syda8c
 url <- "https://iiif.wellcomecollection.org/image/L0057080/full/760%2C/0/default.jpg"
 if (!file.exists("ivory-skull.jpg"))
-    download.file(url, "ivory-skull.jpg")
+    utils::download.file(url, "ivory-skull.jpg")
 img <- image_read("ivory-skull.jpg") |>
     image_scale("20%") |>
     image_crop("100x150+26+18")
@@ -263,7 +268,7 @@ grid.text("Pseudo 3D derivative (based on luminosity)",
 
 
 ```r
-library("dplyr", warn.conflicts = FALSE)
+library("dplyr") |> suppressPackageStartupMessages()
 library("ggplot2")
 library("oblicubes")
 df <- as.data.frame(datasets::Titanic) |>
@@ -284,9 +289,28 @@ ggplot(df, aes(x = Survived, y = Freq, fill = Survived)) +
 
 ## <a name="related">Related software</a>
 
-* [{ambient}](https://github.com/thomasp85/ambient) generates various "noise".  "perlin noise" is often used to generate random terrains.
-* [{ggrgl}](https://github.com/coolbutuseless/ggrgl) Also provides 3D cuboids rendering support (using `{ggplot2}` and `{rgl}`).
+### <a name="oblique">Oblique projection</a>
+
+* [{piecepackr}](https://github.com/piecepackr/piecepackr) supports 3D rendering using an oblique projection (as well as other projections).  Compared to `{oblicubes}` it supports more shapes, adding art/text to their faces, rotating shapes, placing shapes at non-integer coordinates, etc.  Specializes in the production of board game graphics.
+* [{scatterplot3d}](https://cran.r-project.org/package=scatterplot3d)
+
+### <a name="isometric">Isometric projection</a>
+
 * [{isocubes}](https://github.com/coolbutuseless/isocubes) supports 3D rendering of cubes using an [isometric projection](https://en.wikipedia.org/wiki/Isometric_projection).  Direct inspiration for `{oblicubes}`.
 * [{isocuboids}](https://github.com/cj-holmes/isocuboids) supports 3D rendering of cuboids using an isometric projection.  Specializes in the production of isometric pseudo 3-D images.  Direct inspiration for the `{oblicubes}` cuboid support.
-* [{piecepackr}](https://github.com/piecepackr/piecepackr) supports 3D rendering using an oblique projection (as well as other projections).  Compared to `{oblicubes}` it supports more shapes, adding art/text to their faces, rotating shapes, placing shapes at non-integer coordinates, etc.  Specializes in the production of board game graphics.
-* [{rayshader}](https://github.com/tylermorganwall/rayshader) creates beautiful 3D visualizations from elevation data using raytracing, hillshading algorithms, and overlays.
+
+### <a name="related-other">Other 3D packages</a>
+
+These packages usually default to a "perspective" projection but can usually be configured to also support various "orthographic" projections as well:
+
+* [{ggrgl}](https://coolbutuseless.github.io/package/ggrgl/index.html)
+* [{lattice}](https://lattice.r-forge.r-project.org/)
+* [{plot3D}](https://cran.r-project.org/package=plot3D)
+* [{rgl}](https://dmurdoch.github.io/rgl/)
+* [{rayrender}](https://www.rayrender.net/)
+* [{rayshader}](https://www.rayshader.com/)
+* [{rayvertex}](https://www.rayvertex.com/)
+
+### <a name="related-misc">Miscellaneous</a>
+
+* [{ambient}](https://github.com/thomasp85/ambient) generates various "noise".  "perlin noise" is often used to generate random terrains.

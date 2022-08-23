@@ -8,3 +8,4 @@ _pkgdown.yml
 ^\.github$
 ^raw-data$
 ^ivory-skull.jpg$
+^cran-comments.md$
