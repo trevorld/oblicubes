@@ -8,7 +8,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Provides functions for 3D rendering in 'grid' and 'ggplot2' graphics via an oblique projection using cubes and cuboids. Also supports 2D rendering via a primary view orthographic projection. Can be viewed as an extension to the 'isocubes' package \url{https://github.com/coolbutuseless/isocubes}.
+Three-dimensional rendering for 'grid' and 'ggplot2' graphics using cubes and cuboids drawn with an oblique projection. As a special case also supports primary view orthographic projections. Can be viewed as an extension to the 'isocubes' package \url{https://github.com/coolbutuseless/isocubes}.
 }
 \seealso{
 Useful links:

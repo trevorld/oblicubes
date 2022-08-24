@@ -1,8 +1,8 @@
-oblicubes 0.1.1
+oblicubes 0.1.2
 ===============
 
-New features
-------------
+Initial features
+----------------
 
 * `oblicubesGrob()` / `grid.oblicubes()` renders cubes using a 3D
   oblique projection.  `oblicubesGrob()` returns a grid grob object while

@@ -1,12 +1,12 @@
 Package: oblicubes
 Type: Package
 Title: 3D Rendering Using Obliquely Projected Cubes and Cuboids
-Version: 0.1.1
+Version: 0.1.2
 Authors@R: c(person("Trevor L", "Davis", role = c("aut", "cre"),
                     email = "trevor.l.davis@gmail.com",
                     comment = c(ORCID = "0000-0001-6341-4639")),
              person("Mike", "FC", role = "aut", comment = "Some code adapted from isocubes"))
-Description: Provides functions for 3D rendering in 'grid' and 'ggplot2' graphics via an oblique projection using cubes and cuboids.  Also supports 2D rendering via a primary view orthographic projection.  Can be viewed as an extension to the 'isocubes' package <https://github.com/coolbutuseless/isocubes>.
+Description: Three-dimensional rendering for 'grid' and 'ggplot2' graphics using cubes and cuboids drawn with an oblique projection.  As a special case also supports primary view orthographic projections.  Can be viewed as an extension to the 'isocubes' package <https://github.com/coolbutuseless/isocubes>.
 URL: https://trevorldavis.com/R/oblicubes/
 BugReports: https://github.com/trevorld/oblicubes/issues
 License: MIT + file LICENSE

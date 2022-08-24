@@ -1,3 +1,8 @@
+As requested by Banjamin Altmann:
+
+* We tweak the description field (to avoid starting it with "Provides functions for" or "3D")
+* Add an empty new line between YEAR/COPYRIGHT HOLDER entries in the MIT LICENSE file
+
 ## Test environments
 
 * local (linux, R 4.2.1)
