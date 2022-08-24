@@ -4,7 +4,7 @@
 \name{oblicubes-package}
 \alias{oblicubes}
 \alias{oblicubes-package}
-\title{oblicubes: Obliquely Projected Cubes and Cuboids}
+\title{oblicubes: 3D Rendering Using Obliquely Projected Cubes and Cuboids}
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
