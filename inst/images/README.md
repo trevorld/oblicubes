@@ -1,0 +1,1 @@
+Ivory model of a half a human head, half a skull, Europe, undated. [Science Museum, London](https://wellcomecollection.org/). [Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/)

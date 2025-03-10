@@ -1,5 +1,7 @@
 destination: "../../websites/R/oblicubes/"
 url: "https://trevorldavis.com/R/oblicubes"
+template:
+  bootstrap: 5
 development:
     mode: auto
 figures:
