@@ -51,9 +51,9 @@
 #' }
 #' if (require("ggplot2") && require("dplyr")) {
 #'   # Note you probably should not do 3D bar charts...
-#'   df <- as.data.frame(datasets::Titanic) |>
-#'           filter(Age == "Child", Freq > 0) |>
-#'           group_by(Sex, Survived, Class) |>
+#'   df <- as.data.frame(datasets::Titanic) %>%
+#'           filter(Age == "Child", Freq > 0) %>%
+#'           group_by(Sex, Survived, Class) %>%
 #'           summarize(Freq = seq.int(sum(Freq)), .groups = "drop")
 #'   g <- ggplot(df, aes(x = Survived, y = Freq, fill = Survived)) +
 #'       facet_grid(cols = vars(Class, Sex)) +

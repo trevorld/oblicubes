@@ -1,3 +1,10 @@
+oblicubes 1.0.0
+===============
+
+* Removes the R 4.1 pipe from examples
+  (so this package can be used with earlier versions of R).
+* Adds alt descriptions to images in README and vignette.
+
 oblicubes 0.1.2
 ===============
 
@@ -23,4 +30,3 @@ Initial features
 * `cheap_darken()` is a function to darken colors by a certain "amount".
   Faster (but less "good") then `colorspace::darken()`.
   A copy of an internal function from [coolbutuseless](https://github.com/coolbutuseless)'s [{isocubes}](https://github.com/coolbutuseless/isocubes).
-
