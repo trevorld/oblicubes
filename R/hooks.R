@@ -6,9 +6,9 @@ GeomOblicubes <- NULL
 GeomOblicuboids <- NULL
 
 .onLoad <- function(libname, pkgname) {
-  if (requireNamespace("ggplot2", quietly = TRUE)) {
-      # Modify object at load time
-      GeomOblicubes <<- create_GeomOblicubes()
-      GeomOblicuboids <<- create_GeomOblicuboids()
-  }
+	if (requireNamespace("ggplot2", quietly = TRUE)) {
+		# Modify object at load time
+		GeomOblicubes <<- create_GeomOblicubes()
+		GeomOblicuboids <<- create_GeomOblicuboids()
+	}
 }
