@@ -35,9 +35,9 @@
 #'            })
 #' @rdname light_helpers
 cheap_darken <- function(col, amount) {
-  mat <- col2rgb(col, alpha = TRUE)
-  mat[1:3, ] <- mat[1:3, ] * (1 - amount)
-  rgb(mat[1, ], mat[2, ], mat[3, ], mat[4, ], maxColorValue = 255)
+	mat <- col2rgb(col, alpha = TRUE)
+	mat[1:3, ] <- mat[1:3, ] * (1 - amount)
+	rgb(mat[1, ], mat[2, ], mat[3, ], mat[4, ], maxColorValue = 255)
 }
 
 #' 'light' effect helper functions
@@ -67,30 +67,36 @@ cheap_darken <- function(col, amount) {
 #' @rdname light_helpers
 #' @return Vector of darkened colors.
 #' @export
-darken_face <- function(face, col,
-                        top = 0.0,
-                        west = 0.2,
-                        east = 0.2,
-                        south = 0.4,
-                        north = 0.4,
-                        darken_fn = cheap_darken) {
-    switch(face,
-           top = darken_fn(col, top),
-           west = darken_fn(col, west),
-           east = darken_fn(col, east),
-           south = darken_fn(col, south),
-           north = darken_fn(col, north),
-           stop(paste("Unrecognized face", face)))
+darken_face <- function(
+	face,
+	col,
+	top = 0.0,
+	west = 0.2,
+	east = 0.2,
+	south = 0.4,
+	north = 0.4,
+	darken_fn = cheap_darken
+) {
+	switch(
+		face,
+		top = darken_fn(col, top),
+		west = darken_fn(col, west),
+		east = darken_fn(col, east),
+		south = darken_fn(col, south),
+		north = darken_fn(col, north),
+		stop(paste("Unrecognized face", face))
+	)
 }
 
 compute_fill <- function(fill, faces, light) {
-    stopifnot(isTRUE(light) || isFALSE(light) || is.function(light))
-    if (isFALSE(light)) {
-        rep(fill, each = length(faces))
-    } else {
-        if (isTRUE(light))
-            light <- darken_face
-        fills <- lapply(faces, function(face) light(face, fill))
-        do.call(splice1, fills)
-    }
+	stopifnot(isTRUE(light) || isFALSE(light) || is.function(light))
+	if (isFALSE(light)) {
+		rep(fill, each = length(faces))
+	} else {
+		if (isTRUE(light)) {
+			light <- darken_face
+		}
+		fills <- lapply(faces, function(face) light(face, fill))
+		do.call(splice1, fills)
+	}
 }

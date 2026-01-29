@@ -4,7 +4,9 @@
 # Allow `col` to a be a vector or function.
 # By default "up" is 'z' coordinates (which are always positive) and we support more "ground" values
 
-if (getRversion() >= "2.15.1")  utils::globalVariables("z")
+if (getRversion() >= "2.15.1") {
+	utils::globalVariables("z")
+}
 
 #' Calculate x,y,z coordinates from a height matrix
 #'
@@ -79,87 +81,97 @@ if (getRversion() >= "2.15.1")  utils::globalVariables("z")
 #'   plot(g)
 #' }
 #' @export
-xyz_heightmap <- function(mat, col = NULL,
-                          scale = 1, min = NULL,
-                          flipx = FALSE, flipy = TRUE, ground = "xy",
-                          solid = TRUE, verbose = FALSE) {
+xyz_heightmap <- function(
+	mat,
+	col = NULL,
+	scale = 1,
+	min = NULL,
+	flipx = FALSE,
+	flipy = TRUE,
+	ground = "xy",
+	solid = TRUE,
+	verbose = FALSE
+) {
+	verbose <- isTRUE(verbose)
+	solid <- isTRUE(solid)
 
-  verbose <- isTRUE(verbose)
-  solid   <- isTRUE(solid)
+	ground <- match.arg(ground, c("xy", "xz", "zy"))
 
-  ground <- match.arg(ground, c("xy", "xz", "zy"))
+	# Sanity check matrix sizes
+	if (!is.null(col) && is.matrix(col)) {
+		stopifnot(identical(dim(col), dim(mat)))
+	}
 
-  # Sanity check matrix sizes
-  if (!is.null(col) && is.matrix(col)) {
-    stopifnot(identical(dim(col), dim(mat)))
-  }
+	# Flip matrix horizontally
+	if (isTRUE(flipx)) {
+		mat <- mat[, rev(seq_len(ncol(mat)))]
+		if (!is.null(col) && is.matrix(col)) {
+			col <- col[, rev(seq_len(ncol(col)))]
+		}
+	}
 
-  # Flip matrix horizontally
-  if (isTRUE(flipx)) {
-    mat <- mat[, rev(seq_len(ncol(mat)))]
-    if (!is.null(col) && is.matrix(col)) {
-      col <- col[, rev(seq_len(ncol(col)))]
-    }
-  }
+	# Flip matrix vertically
+	if (isTRUE(flipy)) {
+		mat <- mat[rev(seq_len(nrow(mat))), ]
+		if (!is.null(col) && is.matrix(col)) {
+			col <- col[rev(seq_len(nrow(col))), ]
+		}
+	}
 
-  # Flip matrix vertically
-  if (isTRUE(flipy)) {
-    mat <- mat[rev(seq_len(nrow(mat))), ]
-    if (!is.null(col) && is.matrix(col)) {
-      col <- col[rev(seq_len(nrow(col))), ]
-    }
-  }
+	# Create coordinates
+	coords <- data.frame(
+		x = rep(seq_len(ncol(mat)), each = nrow(mat)),
+		y = rep(seq_len(nrow(mat)), times = ncol(mat)),
+		z = round(as.vector(mat) * scale),
+		raw = as.vector(mat)
+	)
+	if (!is.null(min)) {
+		coords$z <- coords$z + (round(min, 0) - base::min(coords$z))
+	}
 
-  # Create coordinates
-  coords <- data.frame(
-    x = rep(seq_len(ncol(mat)), each = nrow(mat)),
-    y = rep(seq_len(nrow(mat)), times = ncol(mat)),
-    z = round(as.vector(mat) * scale),
-    raw = as.vector(mat)
-  )
-  if (!is.null(min))
-      coords$z <- coords$z + (round(min, 0) - base::min(coords$z))
+	# Add color if a matrix
+	if (!is.null(col) && is.matrix(col)) {
+		coords$fill <- as.vector(col)
+	}
 
-  # Add color if a matrix
-  if (!is.null(col) && is.matrix(col))
-      coords$fill <- as.vector(col)
+	# Extrude the cubes down to the ground
+	if (solid) {
+		start <- nrow(coords)
+		coords_list <- lapply(seq(max(coords$z)), function(zfloor) {
+			df <- subset(coords, z >= zfloor)
+			df$z <- zfloor
+			df
+		})
 
-  # Extrude the cubes down to the ground
-  if (solid) {
-    start <- nrow(coords)
-    coords_list <- lapply(seq(max(coords$z)), function(zfloor) {
-      df <- subset(coords, z >= zfloor)
-      df$z <- zfloor
-      df
-    })
+		coords <- do.call(rbind, coords_list)
+		if (verbose) message("Making solid expands cube count from ", start, " to ", nrow(coords))
+	}
 
-    coords <- do.call(rbind, coords_list)
-    if (verbose) message("Making solid expands cube count from ", start, " to ", nrow(coords))
-  }
+	# Add color if a vector or function
+	if (!is.null(col) && !is.matrix(col)) {
+		if (is.function(col)) {
+			col <- col(max(coords$z))
+		}
+		if (max(coords$z) <= length(col)) {
+			coords$fill <- col[coords$z]
+		} else {
+			coords$fill <- col[cut(coords$z, length(col), labels = FALSE)]
+		}
+	}
 
-  # Add color if a vector or function
-  if (!is.null(col) && !is.matrix(col)) {
-      if (is.function(col))
-          col <- col(max(coords$z))
-      if (max(coords$z) <= length(col))
-          coords$fill <- col[coords$z]
-      else
-          coords$fill <- col[cut(coords$z, length(col), labels = FALSE)]
-  }
+	if (ground == 'xz') {
+		# Swap y/z coordinates
+		tmp <- coords$z
+		coords$z <- coords$y
+		coords$y <- tmp
+	} else if (ground == 'zy') {
+		# Swap x/z coordinates
+		tmp <- coords$z
+		coords$z <- coords$x
+		coords$x <- tmp
+	} else if (ground == 'xy') {
+		# Do nothing
+	}
 
-  if (ground == 'xz') {
-    # Swap y/z coordinates
-    tmp      <- coords$z
-    coords$z <- coords$y
-    coords$y <- tmp
-  } else if (ground == 'zy') {
-    # Swap x/z coordinates
-    tmp      <- coords$z
-    coords$z <- coords$x
-    coords$x <- tmp
-  } else if (ground == 'xy') {
-    # Do nothing
-  }
-
-  coords
+	coords
 }

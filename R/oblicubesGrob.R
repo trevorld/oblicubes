@@ -68,128 +68,177 @@
 #' grid::grid.newpage()
 #' grid.oblicubes(coords)
 #' @export
-oblicubesGrob <- function(x, y = NULL, z = NULL,
-                         ...,
-                         fill = NULL,
-                         light = darken_face,
-                         scale = 0.5,
-                         angle = 45,
-                         xo = NULL,
-                         yo = NULL,
-                         width = NULL,
-                         default.units = "snpc",
-                         name = NULL,
-                         gp = gpar(),
-                         vp = NULL) {
+oblicubesGrob <- function(
+	x,
+	y = NULL,
+	z = NULL,
+	...,
+	fill = NULL,
+	light = darken_face,
+	scale = 0.5,
+	angle = 45,
+	xo = NULL,
+	yo = NULL,
+	width = NULL,
+	default.units = "snpc",
+	name = NULL,
+	gp = gpar(),
+	vp = NULL
+) {
+	fill <- get_fill(fill, x, gp)
+	if (is.data.frame(x)) {
+		if (nrow(x) == 0) {
+			return(nullGrob(name = name, vp = vp))
+		}
+		if (is.null(y)) {
+			y <- x$y
+		}
+		if (is.null(z)) {
+			z <- x$z
+		}
+		x <- x$x
+	} else {
+		if (length(x) == 0) {
+			return(nullGrob(name = name, vp = vp))
+		}
+	}
+	if (!is.integer(x)) {
+		x <- round(x, 0)
+	}
+	if (!is.integer(y)) {
+		y <- round(y, 0)
+	}
+	if (!is.integer(z)) {
+		z <- round(z, 0)
+	}
+	angle <- angle %% 360
 
-    fill <- get_fill(fill, x, gp)
-    if (is.data.frame(x)) {
-        if (nrow(x) == 0)
-            return(nullGrob(name = name, vp = vp))
-        if (is.null(y))
-            y <- x$y
-        if (is.null(z))
-            z <- x$z
-        x <- x$x
-    } else {
-        if (length(x) == 0)
-            return(nullGrob(name = name, vp = vp))
-    }
-    if (!is.integer(x))
-        x <- round(x, 0)
-    if (!is.integer(y))
-        y <- round(y, 0)
-    if (!is.integer(z))
-        z <- round(z, 0)
-    angle <- angle %% 360
+	if (is.null(width) || is.null(xo) || is.null(yo)) {
+		l <- aabb_cubes(data.frame(x = x, y = y, z = z), scale = scale, angle = angle)
+	} else {
+		l <- NULL
+	}
 
-    if (is.null(width) || is.null(xo) || is.null(yo))
-        l <- aabb_cubes(data.frame(x=x, y=y, z=z), scale = scale, angle = angle)
-    else
-        l <- NULL
+	gp <- merge_gpar(gp, gpar(...))
+	df <- data.frame(x = x, y = y, z = z, fill = fill)
+	df <- visible_cubes(df, angle, scale) # cull, sort
 
-    gp <- merge_gpar(gp, gpar(...))
-    df <- data.frame(x=x, y=y, z=z, fill=fill)
-    df <- visible_cubes(df, angle, scale) # cull, sort
-
-    # Delay draw so xo, yo, width correctly converted in relevant viewport
-    gTree(df=df, xo=xo, yo=yo, width=width, l=l,
-          angle=angle, scale=scale, light=light,
-          default.units = default.units,
-          name = name, gp = gp, vp = vp,
-          cl = "oblicubes_cubes_grob")
+	# Delay draw so xo, yo, width correctly converted in relevant viewport
+	gTree(
+		df = df,
+		xo = xo,
+		yo = yo,
+		width = width,
+		l = l,
+		angle = angle,
+		scale = scale,
+		light = light,
+		default.units = default.units,
+		name = name,
+		gp = gp,
+		vp = vp,
+		cl = "oblicubes_cubes_grob"
+	)
 }
 
 #' @export
 makeContent.oblicubes_cubes_grob <- function(x) {
-    angle <- x$angle
-    scale <- x$scale
-    xo <- x$xo
-    yo <- x$yo
-    width <- x$width
-    l <- x$l
+	angle <- x$angle
+	scale <- x$scale
+	xo <- x$xo
+	yo <- x$yo
+	width <- x$width
+	l <- x$l
 
-    if (is.null(width)) {
-        x_diff <- diff(l$x_op)
-        y_diff <- diff(l$y_op)
-        width <- 0.95 * min(convertWidth(unit(1 / x_diff, "npc"), "bigpts"),
-                            convertHeight(unit(1 / y_diff, "npc"), "bigpts"))
-    }
-    if (!inherits(width, "unit"))
-        width <- unit(width, x$default.units)
-    if (is.null(xo))
-        xo <- -l$x_op[1] * width + unit(0.01, "snpc")
-    if (!inherits(xo, "unit"))
-        xo <- unit(xo, x$default.units)
-    if (is.null(yo))
-        yo <- -l$y_op[1] * width + unit(0.01, "snpc")
-    if (!inherits(yo, "unit"))
-        yo <- unit(yo, x$default.units)
+	if (is.null(width)) {
+		x_diff <- diff(l$x_op)
+		y_diff <- diff(l$y_op)
+		width <- 0.95 *
+			min(
+				convertWidth(unit(1 / x_diff, "npc"), "bigpts"),
+				convertHeight(unit(1 / y_diff, "npc"), "bigpts")
+			)
+	}
+	if (!inherits(width, "unit")) {
+		width <- unit(width, x$default.units)
+	}
+	if (is.null(xo)) {
+		xo <- -l$x_op[1] * width + unit(0.01, "snpc")
+	}
+	if (!inherits(xo, "unit")) {
+		xo <- unit(xo, x$default.units)
+	}
+	if (is.null(yo)) {
+		yo <- -l$y_op[1] * width + unit(0.01, "snpc")
+	}
+	if (!inherits(yo, "unit")) {
+		yo <- unit(yo, x$default.units)
+	}
 
-    # convert to 'bigpts' for easier calculations
-    xo <- convertX(xo, "bigpts", valueOnly = TRUE)
-    yo <- convertY(yo, "bigpts", valueOnly = TRUE)
-    width <- convertWidth(width, "bigpts", valueOnly = TRUE)
+	# convert to 'bigpts' for easier calculations
+	xo <- convertX(xo, "bigpts", valueOnly = TRUE)
+	yo <- convertY(yo, "bigpts", valueOnly = TRUE)
+	width <- convertWidth(width, "bigpts", valueOnly = TRUE)
 
-    df <- op_transform(x$df, xo, yo, width) # rescale, translate
-    mat <- as.matrix(df[, c(1, 2, 3)])
+	df <- op_transform(x$df, xo, yo, width) # rescale, translate
+	mat <- as.matrix(df[, c(1, 2, 3)])
 
-    faces <- get_faces(angle, scale)
-    xs <- lapply(faces, face_x, mat, angle, scale, width)
-    ys <- lapply(faces, face_y, mat, angle, scale, width)
+	faces <- get_faces(angle, scale)
+	xs <- lapply(faces, face_x, mat, angle, scale, width)
+	ys <- lapply(faces, face_y, mat, angle, scale, width)
 
-    xs <- do.call(splice4, xs)
-    y <- do.call(splice4, ys)
-    gp <- gpar()
-    gp$fill <- compute_fill(df$fill, faces, x$light)
+	xs <- do.call(splice4, xs)
+	y <- do.call(splice4, ys)
+	gp <- gpar()
+	gp$fill <- compute_fill(df$fill, faces, x$light)
 
-    grob <- polygonGrob(x=xs, y=y,
-                        id.lengths = rep(4, length(gp$fill)),
-                        default.units = "bigpts", gp = gp, name = "cubes")
-    setChildren(x, gList(grob))
+	grob <- polygonGrob(
+		x = xs,
+		y = y,
+		id.lengths = rep(4, length(gp$fill)),
+		default.units = "bigpts",
+		gp = gp,
+		name = "cubes"
+	)
+	setChildren(x, gList(grob))
 }
 
 #' @rdname oblicubesGrob
 #' @export
-grid.oblicubes <- function(x, y = NULL, z = NULL,
-                          ...,
-                          fill = NULL,
-                          light = darken_face,
-                          scale = 0.5,
-                          angle = 45,
-                          xo = NULL, yo = NULL, width = NULL,
-                          default.units = "snpc",
-                          name = NULL,
-                          gp = gpar(),
-                          vp = NULL) {
-
-    grob <- oblicubesGrob(x, y, z,
-                          ...,
-                          scale = scale, angle = angle,
-                          fill = fill, light = light,
-                          xo = xo, yo = yo, width = width,
-                          default.units = default.units,
-                          name = name, gp = gp, vp = vp)
-    grid.draw(grob)
-    invisible(grob)
+grid.oblicubes <- function(
+	x,
+	y = NULL,
+	z = NULL,
+	...,
+	fill = NULL,
+	light = darken_face,
+	scale = 0.5,
+	angle = 45,
+	xo = NULL,
+	yo = NULL,
+	width = NULL,
+	default.units = "snpc",
+	name = NULL,
+	gp = gpar(),
+	vp = NULL
+) {
+	grob <- oblicubesGrob(
+		x,
+		y,
+		z,
+		...,
+		scale = scale,
+		angle = angle,
+		fill = fill,
+		light = light,
+		xo = xo,
+		yo = yo,
+		width = width,
+		default.units = default.units,
+		name = name,
+		gp = gp,
+		vp = vp
+	)
+	grid.draw(grob)
+	invisible(grob)
 }
