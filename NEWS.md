@@ -1,3 +1,9 @@
+oblicubes 1.0.1
+===============
+
+* Use `dplyr::reframe()` instead of deprecated usage of
+  `dplyr::summarize()` in a couple of examples (#18).
+
 oblicubes 1.0.0
 ===============
 
